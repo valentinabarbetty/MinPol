@@ -1,16 +1,35 @@
+
+.header {
+  display: flex;                /* Utiliza flexbox para el layout */
+  justify-content: space-between; /* Espacia entre el título y el ícono */
+  align-items: center;         /* Centra verticalmente los elementos */
+  background-color: #5B96B1;  /* Color de fondo */
+  padding: 5px;               /* Espaciado interno */
+}
+
+.title {
+  color: white;               /* Color del texto */
+  margin: 0;                  /* Elimina el margen del título */
+  font-size: 24px;            /* Tamaño de fuente del título */
+  font-weight: bold;          /* Peso de fuente del título */
+  text-align: center;           /* Asegura que el texto esté alineado a la izquierda */
+  flex: 1;                    /* Permite que el título ocupe todo el espacio disponible */
+}
+
+.icon {
+  padding-right: 25px;        /* Espaciado interno a la derecha */
+  color: white;            
+  font-size: 40px;       
+        
+}
+
+
 /* navbar.component.css */
-nav {
-    background-color: #1976d2; /* Color del fondo del navbar */
-    padding: 16px;
-  }
-  
-  a {
-    color: white; /* Color del texto de los enlaces */
-    text-decoration: none;
-    margin-right: 16px;
-  }
-  
-  a.active-link {
-    font-weight: bold;
-  }
-  
+.custom-tooltip {
+  background-color: #fff; /* Color de fondo */
+  color: #000; /* Color del texto */
+  font-size: 14px; /* Tamaño de fuente */
+  padding: 8px; /* Espaciado interno */
+  border-radius: 4px; /* Bordes redondeados */
+  white-space: pre-line; /* Permite que los saltos de línea sean respetados */
+}
