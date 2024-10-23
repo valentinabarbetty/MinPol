@@ -1,0 +1,16 @@
+/* navbar.component.css */
+nav {
+    background-color: #1976d2; /* Color del fondo del navbar */
+    padding: 16px;
+  }
+  
+  a {
+    color: white; /* Color del texto de los enlaces */
+    text-decoration: none;
+    margin-right: 16px;
+  }
+  
+  a.active-link {
+    font-weight: bold;
+  }
+  

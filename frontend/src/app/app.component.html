@@ -1,0 +1,12 @@
+<app-navbar></app-navbar>
+<h1 style="text-align: center; margin-top: 20px;">MinPol</h1>
+
+<div style="text-align: center; margin-top: 20px;">
+  <input type="number" [(ngModel)]="num1" placeholder="Número 1" />
+  <input type="number" [(ngModel)]="num2" placeholder="Número 2" />
+  <button (click)="calcularSuma()">Sumar</button>
+</div>
+
+<h2 style="text-align: center; margin-top: 20px;">Resultado: {{ resultado }}</h2>
+
+<router-outlet></router-outlet>
