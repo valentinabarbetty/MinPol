@@ -1,35 +1,34 @@
-
+/* navbar.component.css */
 .header {
-  display: flex;                /* Utiliza flexbox para el layout */
-  justify-content: space-between; /* Espacia entre el título y el ícono */
-  align-items: center;         /* Centra verticalmente los elementos */
-  background-color: #5B96B1;  /* Color de fondo */
-  padding: 5px;               /* Espaciado interno */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #042956;
+  padding: 5px;
 }
 
+
 .title {
-  color: white;               /* Color del texto */
-  margin: 0;                  /* Elimina el margen del título */
-  font-size: 24px;            /* Tamaño de fuente del título */
-  font-weight: bold;          /* Peso de fuente del título */
-  text-align: center;           /* Asegura que el texto esté alineado a la izquierda */
-  flex: 1;                    /* Permite que el título ocupe todo el espacio disponible */
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  flex: 1;
+  font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
 }
 
 .icon {
-  padding-right: 25px;        /* Espaciado interno a la derecha */
+  padding-right: 25px;
   color: white;            
   font-size: 40px;       
-        
 }
 
-
-/* navbar.component.css */
-.custom-tooltip {
-  background-color: #fff; /* Color de fondo */
-  color: #000; /* Color del texto */
-  font-size: 14px; /* Tamaño de fuente */
-  padding: 8px; /* Espaciado interno */
-  border-radius: 4px; /* Bordes redondeados */
-  white-space: pre-line; /* Permite que los saltos de línea sean respetados */
+.square-button {
+  width: 50px; /* Ajusta el tamaño según lo necesites */
+  height: 50px; /* Ajusta el tamaño según lo necesites */
+  padding: 0; /* Elimina el padding predeterminado */
+  border-radius: 0; /* Elimina el borde redondeado */
+  font-weight: bold; /* Hace que el texto sea negrita */
+  color: black !important; /* Cambia el color del texto y usa !important */
 }

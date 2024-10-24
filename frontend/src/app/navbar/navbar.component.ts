@@ -9,8 +9,5 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  tooltipContent: string = "Integrantes:<br> Brayan Gomez Muñoz<br>    Valentina Barbetty Arango<br>    Jheison Estiben Gomez Muñoz";
-    
-  
-
+  tooltipContent: string = "Integrantes: Brayan Gomez Muñoz    Valentina Barbetty Arango   Jheison Estiben Gomez Muñoz";
 }

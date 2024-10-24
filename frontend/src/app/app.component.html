@@ -1,12 +1,63 @@
 <app-navbar></app-navbar>
-<h1 style="text-align: center; margin-top: 20px;">MinPol</h1>
 
-<div style="text-align: center; margin-top: 20px;">
-  <input type="number" [(ngModel)]="num1" placeholder="Número 1" />
-  <input type="number" [(ngModel)]="num2" placeholder="Número 2" />
-  <button (click)="calcularSuma()">Sumar</button>
+<div class="steps-container">
+  <!-- Botón para subir archivo -->
+  <input
+    type="file"
+    id="fileInput"
+    (change)="onFileSelected($event)"
+    style="display: none"
+  />
+
+  <div class="upload-section">
+    <button
+      mat-raised-button
+      color="primary"
+      class="square-button"
+      (click)="triggerFileInput()"
+      matTooltip="Seleccionar archivo para subir"
+    >
+      <mat-icon>upload</mat-icon>
+      Subir Archivo
+    </button>
+    <div *ngIf="selectedFile" class="file-info">
+      Archivo seleccionado: {{ selectedFile?.name }}
+    </div>
+  </div>
+
+  <!-- Botón procesar, deshabilitado hasta que se suba un archivo -->
+
+  <div class="upload-section">
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="processFile()"
+      class="square-button"
+      [disabled]="!selectedFile"
+      matTooltip="Haz clic aquí para procesar el archivo"
+    >
+      <mat-icon>play_arrow</mat-icon>
+      Procesar
+    </button>
+  </div>
 </div>
 
-<h2 style="text-align: center; margin-top: 20px;">Resultado: {{ resultado }}</h2>
+<mat-tab-group class="tab-group">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">upload</mat-icon>
+      Datos Cargados
+    </ng-template>
+    Content 1
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="tab-icon">check_circle</mat-icon>
+      Resultado
+    </ng-template>
+    Content 2
+  </mat-tab>
+</mat-tab-group>
 
 <router-outlet></router-outlet>
