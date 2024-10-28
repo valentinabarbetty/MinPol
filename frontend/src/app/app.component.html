@@ -21,26 +21,16 @@
       Subir Archivo
     </button>
     <div *ngIf="selectedFile" class="file-info">
-      Archivo seleccionado: {{ selectedFile?.name }}
+      Archivo seleccionado: {{ selectedFile.name }}
     </div>
   </div>
 
   <!-- Botón procesar, deshabilitado hasta que se suba un archivo -->
-
-  <div class="upload-section">
-    <button
-      mat-raised-button
-      color="accent"
-      (click)="processFile()"
-      class="square-button"
-      [disabled]="!selectedFile"
-      matTooltip="Haz clic aquí para procesar el archivo"
-    >
-      <mat-icon>play_arrow</mat-icon>
-      Procesar
-    </button>
-  </div>
+  <button mat-raised-button color="primary" class="square-button" (click)="ejecutarMinizinc()">
+    Procesar
+  </button>
 </div>
+
 
 <mat-tab-group class="tab-group">
   <mat-tab>
@@ -48,7 +38,72 @@
       <mat-icon class="tab-icon">upload</mat-icon>
       Datos Cargados
     </ng-template>
-    Content 1
+
+    <div *ngIf="parsedData.numPersonas" class="data-display">
+      <h3>Datos Cargados</h3>
+      <p><strong>Número de Personas:</strong> {{ parsedData.numPersonas }}</p>
+      <p><strong>Número de Opiniones:</strong> {{ parsedData.numOpiniones }}</p>
+
+      <div>
+        <strong>Distribución de Personas por Opinión:</strong>
+        <ul>
+          <li
+            *ngFor="
+              let opinion of parsedData.distribucionOpiniones;
+              let i = index
+            "
+          >
+            Opinión {{ i + 1 }}: {{ opinion }}
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <strong>Valores de Opiniones:</strong>
+        <ul>
+          <li *ngFor="let valor of parsedData.valoresOpiniones; let i = index">
+            Opinión {{ i + 1 }}: {{ valor }}
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <strong>Costos Extras de Opiniones:</strong>
+        <ul>
+          <li *ngFor="let costoExtra of parsedData.costosExtras; let i = index">
+            Opinión {{ i + 1 }}: {{ costoExtra }}
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <strong>Costos de Desplazamiento entre Opiniones:</strong>
+        <table>
+          <tr>
+            <th
+              *ngFor="
+                let i of parsedData.costosDesplazamiento[0];
+                let j = index
+              "
+            >
+              Opinión {{ j + 1 }}
+            </th>
+          </tr>
+          <tr *ngFor="let row of parsedData.costosDesplazamiento">
+            <td *ngFor="let cost of row">{{ cost }}</td>
+          </tr>
+        </table>
+      </div>
+
+      <p>
+        <strong>Costo Total Máximo Permitido:</strong>
+        {{ parsedData.costoTotalMax }}
+      </p>
+      <p>
+        <strong>Número Máximo de Movimientos Permitidos:</strong>
+        {{ parsedData.maxMovimientos }}
+      </p>
+    </div>
   </mat-tab>
 
   <mat-tab>
@@ -56,8 +111,10 @@
       <mat-icon class="tab-icon">check_circle</mat-icon>
       Resultado
     </ng-template>
-    Content 2
+    <div *ngIf="resultadoMinizinc">
+      <h3>Resultado de MiniZinc</h3>
+      <p>{{ resultadoMinizinc }}</p>
+    </div>
   </mat-tab>
 </mat-tab-group>
-
 <router-outlet></router-outlet>

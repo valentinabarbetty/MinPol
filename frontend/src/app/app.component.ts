@@ -5,7 +5,7 @@ import { MinizincService } from './minizinc.service';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button'; 
+import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs'; // Importa MatTabsModule
 import { CommonModule } from '@angular/common'; // Importa CommonModule
@@ -30,30 +30,71 @@ import { CommonModule } from '@angular/common'; // Importa CommonModule
 export class AppComponent {
   title = 'min-pol';
   selectedFile: File | null = null;
-  showTab = false;
+  parsedData: any = {}; // Almacena los datos extraídos del archivo
+  errorMessage: string = ''; // Para mostrar mensajes de error
+  resultadoMinizinc: string | null = null;
 
-  constructor(private minizincService: MinizincService) {}
+  constructor(private minizincService: MinizincService) { }
 
-  triggerFileInput(): void {
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.click();
+  triggerFileInput() {
+    document.getElementById('fileInput')?.click();
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    this.selectedFile = file;
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = (e.target?.result as string).split('\n');
+        this.parseFileContent(content);
+      };
+      reader.readAsText(file);
     }
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+
+  parseFileContent(content: string[]) {
+    try {
+      this.parsedData.numPersonas = parseInt(content[0]);
+      this.parsedData.numOpiniones = parseInt(content[1]);
+      this.parsedData.distribucionOpiniones = content[2].split(',').map(Number);
+      this.parsedData.valoresOpiniones = content[3].split(',').map(Number);
+      this.parsedData.costosExtras = content[4].split(',').map(Number);
+
+      // Matriz de costos de desplazamiento
+      this.parsedData.costosDesplazamiento = [];
+      for (let i = 0; i < this.parsedData.numOpiniones; i++) {
+        this.parsedData.costosDesplazamiento.push(
+          content[5 + i].split(',').map(Number)
+        );
+      }
+
+      // Costo total máximo permitido
+      this.parsedData.costoTotalMax = parseFloat(content[5 + this.parsedData.numOpiniones]);
+
+      // Número máximo de movimientos permitidos
+      this.parsedData.maxMovimientos = parseInt(content[6 + this.parsedData.numOpiniones]);
+
+      // Resetear mensajes de error
+      this.errorMessage = '';
+    } catch (error) {
+      this.errorMessage = 'Error al procesar el archivo. Verifica el formato.';
     }
   }
-
-  processFile(): void {
-    if (this.selectedFile) {
-      console.log('Archivo procesado:', this.selectedFile?.name);
-      this.showTab = true;
-    } else {
-      console.error('No se ha seleccionado ningún archivo');
-    }
+  ejecutarMinizinc() {
+    this.minizincService.ejecutarMinizinc(this.parsedData).subscribe({
+      next: (response) => {
+        this.resultadoMinizinc = response.resultado;
+      },
+      error: (err) => {
+        console.error('Error al ejecutar MiniZinc:', err);
+      }
+    });
   }
 }
+
+
+
+
