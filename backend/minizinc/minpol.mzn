@@ -107,8 +107,25 @@ var float: polarizacion = sum(i in 1..m)(terminos_polarizacion[i]);
 solve minimize polarizacion;
 
 
-% INSTRUCCIÓN DE SALIDA
+
+
+
+
+
+
+
+
+
+
+
+%                             Mostrar el resultado
 output [
-    "Polarizacion minima = ", show(polarizacion), "\n",
-    "Movimientos entre opiniones: ", show(nueva_p), "\n",
+    "La mediana ponderada final es: ", show(nueva_mediana_ponderada), "\n",
+    "Distribución final de personas por opinión: ", show(nueva_p), "\n",
+    "Términos de la polarización: ", show(terminos_polarizacion), "\n",
+    "Polarización total: ", show(polarizacion), "\n",
+    "Costo: ", show(costo), "\n",
+     "Movs: ", show(movs), "\n",
+      "una: ", show(una), "\n",
+      "x: ", show(x), "\n",
 ];
