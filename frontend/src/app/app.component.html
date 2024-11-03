@@ -111,9 +111,25 @@
       <mat-icon class="tab-icon">check_circle</mat-icon>
       Resultado
     </ng-template>
-    <div *ngIf="resultadoMinizinc">
+    <div *ngIf="polarizacion !== null && movimientos">
       <h3>Resultado de MiniZinc</h3>
-      <p>{{ resultadoMinizinc }}</p>
+      <p><strong>Polarización mínima:</strong> {{ polarizacion }}</p>
+      
+      <h4>Movimientos entre Opiniones</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Opinión</th>
+            <th *ngFor="let i of movimientos[0]; let j = index">Opinión {{ j + 1 }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of movimientos; let i = index">
+            <td><strong>Opinión {{ i + 1 }}</strong></td>
+            <td *ngFor="let movimiento of row">{{ movimiento }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </mat-tab>
 </mat-tab-group>

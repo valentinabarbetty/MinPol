@@ -8,61 +8,107 @@ array[1..m, 1..m] of float: c; % Costo del esfuerzo de mover una persona de opin
 float: ct; % Costo total máximo permitido
 int: maxM; % Número máximo de movimientos permitidos
 
-% VARIABLES DE DECISIÓN
-array[1..m, 1..m] of var 0..n: x; % Número de personas que se moverán de opinión i a opinión j
 
-% FUNCIONES AUXILIARES
-function int: indicator(bool: condition) = if condition then 1 else 0 endif;
+%Variables de Decisión
 
-% Cálculo de la mediana ponderada (mediana_pv)
-var float: mediana_pv = 
-    if sum(p) mod 2 = 1 then
-        v[arg_sort(p)[(sum(p) + 1) div 2]]
-    else
-        (v[arg_sort(p)[sum(p) div 2]] + v[arg_sort(p)[(sum(p) div 2) + 1]]) / 2
-    endif;
+array[1..m, 1..m] of var 0..n: x; % Número de personas que se mueven de opinión i a j
 
-% Cálculo de la polarización total
-var float: polarizacion = sum(i in 1..m)(p[i] * abs(v[i] - mediana_pv));
 
-% FUNCIÓN OBJETIVO: Minimizar la polarización
-solve minimize polarizacion;
 
-% RESTRICCIONES
-constraint
- sum(i in 1..m)(
-      sum(j in 1..m)(
-          c[i, j] * (1 + p[i] / n) * x[i, j] + ce[j] * x[i, j] * indicator(p[j] == 0)
-      )
-    ) <= ct;
 
-constraint
-forall(i in 1..m) (
-    sum(j in 1..m) (x[i, j]) <= p[i]
-);
 
-constraint 
-    sum(i in 1..m)(
-        sum(j in 1..m)(
+%                              otras vars
+
+var float: costo = sum(i, j in 1..m)(c[i, j] * (1 + p[i] / n) * x[i, j] + (if p[j] = 0 then ce[j] else 0 endif)* ce[j] * x[i, j] );
+var float: movs =     sum(i,j in 1..m)(
+        
             abs(j - i) * x[i,j]
-        )
-    ) <= maxM;
+        
+    );
 
-constraint 
-    sum(i in 1..m)(
-        sum(j in 1..m)(
+var float: una =     
+        sum(i,j in 1..m)(
             x[i,j]
         )
-    ) <= n;
+    ;
+    
+    
+    
+    
+    
+    
+    
+%                                           Restricciones
+
+constraint costo <= ct; % Restricción de costo total permitido
+
+constraint movs <= maxM; % Restricción de número máximo de movimientos
+
+constraint forall(i in 1..m)(sum(j in 1..m)(x[i, j]) <= p[i]); % No se pueden mover más personas de las que originalmente están en cada opinión
+
+constraint forall(i in 1..m)(x[i,i] = 0); %no se permiten mover personas dentro de la misma opinion
+
+
+constraint costo >= 0;
+
+constraint movs >= 0;
+
+constraint una <= n;
+
+
+
+
+
+
+
+
+
+
+
+% Calcular la nueva distribución de personas después de los movimientos
+array[1..m] of var int: nueva_p = [ p[i] + sum(j in 1..m)(x[j, i]) - sum(j in 1..m)(x[i, j]) | i in 1..m]; 
+
+% Función para calcular el punto medio
+function float: calcular_punto_medio(int: total_personas) =
+    if total_personas mod 2 = 1 then(total_personas + 1) / 2.0 
+    else total_personas / 2.0 endif;
+
+
+% Función para calcular la mediana ponderada ajustada
+function float: calcular_mediana_ponderada(array[int] of int: p_actual, array[int] of float: v) =
+    let {
+        int: total_personas = sum(p_actual),
+        float: punto_medio = calcular_punto_medio(total_personas),
+        array[int] of float: acumulado = [sum(p_actual[1..i]) | i in index_set(p_actual)]
+    } in
+    v[arg_min([if acumulado[i] >= punto_medio then acumulado[i] else total_personas + 1 endif | i in index_set(p_actual)])];
+
+% Calcular la mediana ponderada para la nueva distribución
+var float: nueva_mediana_ponderada = calcular_mediana_ponderada(p, v);
+
+% Array para almacenar cada término de la polarización
+array[1..m] of var float: terminos_polarizacion = [
+    nueva_p[i] * abs(v[i] - nueva_mediana_ponderada) | i in 1..m
+];
+
+
+
+
+
+
+
+
+
+
+
+
+%                     Función Objetivo: Minimizar la polarización total
+var float: polarizacion = sum(i in 1..m)(terminos_polarizacion[i]);
+solve minimize polarizacion;
+
 
 % INSTRUCCIÓN DE SALIDA
 output [
     "Polarizacion minima = ", show(polarizacion), "\n",
-    "Movimientos entre opiniones:\n"
-] ++
-[
-    "De opinion ", show(i), " a opinion ", show(j), ": ", show(x[i, j]), "\n"
-    | i in 1..m, j in 1..m
-    where x[i,j] > 0 % Solo mostrar movimientos donde hay personas moviéndose
+    "Movimientos entre opiniones: ", show(nueva_p), "\n",
 ];
-

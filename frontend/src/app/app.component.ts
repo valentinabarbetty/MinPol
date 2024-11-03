@@ -33,7 +33,9 @@ export class AppComponent {
   parsedData: any = {}; // Almacena los datos extraídos del archivo
   errorMessage: string = ''; // Para mostrar mensajes de error
   resultadoMinizinc: string | null = null;
-
+  polarizacion: number | null = null; // Valor de polarización
+  movimientos: number[][] | null = null; // Matriz de movimientos entre opiniones
+  
   constructor(private minizincService: MinizincService) { }
 
   triggerFileInput() {
@@ -83,10 +85,12 @@ export class AppComponent {
       this.errorMessage = 'Error al procesar el archivo. Verifica el formato.';
     }
   }
+  
   ejecutarMinizinc() {
     this.minizincService.ejecutarMinizinc(this.parsedData).subscribe({
       next: (response) => {
-        this.resultadoMinizinc = response.resultado;
+        this.polarizacion = response.polarizacion;
+        this.movimientos = response.movimientos;
       },
       error: (err) => {
         console.error('Error al ejecutar MiniZinc:', err);

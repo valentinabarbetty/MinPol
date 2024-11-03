@@ -1,3 +1,4 @@
+// minizinc.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -10,7 +11,7 @@ export class MinizincService {
 
   constructor(private http: HttpClient) { }
 
-  ejecutarMinizinc(data: any): Observable<{ resultado: string }> {
-    return this.http.post<{ resultado: string }>(this.apiUrl, data);
+  ejecutarMinizinc(data: any): Observable<{ polarizacion: number, movimientos: number[][] }> {
+    return this.http.post<{ polarizacion: number, movimientos: number[][] }>(this.apiUrl, data);
   }
 }
