@@ -1,47 +1,68 @@
-% Definición de parámetros (valores que se leerán desde el archivo data.dzn)
-int: numPersonas;                          % Número de personas en la red social
-int: numOpiniones;                          % Número de opiniones posibles
-array[1..numOpiniones] of int: distribucionOpiniones; % Distribución de personas por opinión inicial
-array[1..numOpiniones] of float: valoresOpiniones;    % Valores de las opiniones
-array[1..numOpiniones] of float: costosExtras;        % Costos extra de moderación para cada opinión
-array[1..numOpiniones, 1..numOpiniones] of float: costosDesplazamiento; % Matriz de costos de desplazamiento
-float: costoTotalMax;                       % Costo total máximo permitido
-int: maxMovimientos;                        % Número máximo de movimientos permitidos
+% DATOS DE ENTRADA
+int: n; % Número de personas
+int: m; % Número de opiniones posibles que pueden tener las personas
+array[1..m] of int: p; % Número de personas en cada opinión inicial
+array[1..m] of float: v; % Valores de las opiniones
+array[1..m] of float: ce; % Valores de los costos extras
+array[1..m, 1..m] of float: c; % Costo del esfuerzo de mover una persona de opinión i a opinión j
+float: ct; % Costo total máximo permitido
+int: maxM; % Número máximo de movimientos permitidos
 
-% Variables de decisión
-array[1..numOpiniones] of var 0..1: estrategiaModeracion; % Estrategia de moderación (0 = no modera, 1 = modera)
-var float: esfuerzoTotal;                    % Esfuerzo total requerido para aplicar la estrategia
-var float: extremismoFinal;                  % Nivel de extremismo final después de la moderación
+% VARIABLES DE DECISIÓN
+array[1..m, 1..m] of var 0..n: x; % Número de personas que se moverán de opinión i a opinión j
 
-% Restricciones
+% FUNCIONES AUXILIARES
+function int: indicator(bool: condition) = if condition then 1 else 0 endif;
+
+% Cálculo de la mediana ponderada (mediana_pv)
+var float: mediana_pv = 
+    if sum(p) mod 2 = 1 then
+        v[arg_sort(p)[(sum(p) + 1) div 2]]
+    else
+        (v[arg_sort(p)[sum(p) div 2]] + v[arg_sort(p)[(sum(p) div 2) + 1]]) / 2
+    endif;
+
+% Cálculo de la polarización total
+var float: polarizacion = sum(i in 1..m)(p[i] * abs(v[i] - mediana_pv));
+
+% FUNCIÓN OBJETIVO: Minimizar la polarización
+solve minimize polarizacion;
+
+% RESTRICCIONES
 constraint
-    % Restricción del costo total permitido para moderación
-    sum(i in 1..numOpiniones)(
-        distribucionOpiniones[i] * (estrategiaModeracion[i] * (1 - costosExtras[i]) * abs(valoresOpiniones[i]))
-    ) <= costoTotalMax;
+ sum(i in 1..m)(
+      sum(j in 1..m)(
+          c[i, j] * (1 + p[i] / n) * x[i, j] + ce[j] * x[i, j] * indicator(p[j] == 0)
+      )
+    ) <= ct;
 
 constraint
-    % Restricción del número máximo de movimientos permitidos
-    sum(i in 1..numOpiniones)(estrategiaModeracion[i]) <= maxMovimientos;
+forall(i in 1..m) (
+    sum(j in 1..m) (x[i, j]) <= p[i]
+);
 
-% Cálculo del esfuerzo total de moderación
-constraint
-    esfuerzoTotal = sum(i in 1..numOpiniones)(
-        distribucionOpiniones[i] * (estrategiaModeracion[i] * (1 - costosExtras[i]) * abs(valoresOpiniones[i]))
-    );
+constraint 
+    sum(i in 1..m)(
+        sum(j in 1..m)(
+            abs(j - i) * x[i,j]
+        )
+    ) <= maxM;
 
-% Cálculo del extremismo final
-constraint
-    extremismoFinal = 2 * sqrt(sum(i in 1..numOpiniones)(
-        (estrategiaModeracion[i] == 0) * (distribucionOpiniones[i] * valoresOpiniones[i]^2)
-    ) / numOpiniones);
+constraint 
+    sum(i in 1..m)(
+        sum(j in 1..m)(
+            x[i,j]
+        )
+    ) <= n;
 
-% Función objetivo: minimizar el extremismo en la red
-solve minimize extremismoFinal;
-
-% Salida de resultados
+% INSTRUCCIÓN DE SALIDA
 output [
-    "Extremismo Final: ", show(extremismoFinal), "\n",
-    "Esfuerzo Total: ", show(esfuerzoTotal), "\n",
-    "Estrategia de Moderación: ", show(estrategiaModeracion)
+    "Polarizacion minima = ", show(polarizacion), "\n",
+    "Movimientos entre opiniones:\n"
+] ++
+[
+    "De opinion ", show(i), " a opinion ", show(j), ": ", show(x[i, j]), "\n"
+    | i in 1..m, j in 1..m
+    where x[i,j] > 0 % Solo mostrar movimientos donde hay personas moviéndose
 ];
+
