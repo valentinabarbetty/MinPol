@@ -1,7 +1,7 @@
-// minizinc.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,17 @@ export class MinizincService {
 
   constructor(private http: HttpClient) { }
 
-  ejecutarMinizinc(data: any): Observable<{ polarizacion: number, movimientos: number[][] }> {
-    return this.http.post<{ polarizacion: number, movimientos: number[][] }>(this.apiUrl, data);
+  ejecutarMinizinc(data: any): Observable<{ polarizacion: number, movimientos: number, distribucion: number[] }> {
+    return this.http.post<{ polarizacion: number, movimientos: number, distribucion: number[] }>(this.apiUrl, data)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 408) {
+      return throwError('El servidor tardó demasiado en responder. Inténtalo de nuevo más tarde.');
+    }
+    return throwError('Ocurrió un error al procesar la solicitud.');
   }
 }

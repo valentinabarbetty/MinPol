@@ -34,8 +34,9 @@ export class AppComponent {
   errorMessage: string = ''; // Para mostrar mensajes de error
   resultadoMinizinc: string | null = null;
   polarizacion: number | null = null; // Valor de polarización
-  movimientos: number[][] | null = null; // Matriz de movimientos entre opiniones
-  
+  movimientos: number | null = null;
+  distribucion: number[] | null = null;
+
   constructor(private minizincService: MinizincService) { }
 
   triggerFileInput() {
@@ -91,6 +92,7 @@ export class AppComponent {
       next: (response) => {
         this.polarizacion = response.polarizacion;
         this.movimientos = response.movimientos;
+        this.distribucion = response.distribucion;
       },
       error: (err) => {
         console.error('Error al ejecutar MiniZinc:', err);
