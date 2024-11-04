@@ -43,7 +43,7 @@ router.post('/minPol', (req, res) => {
 
         // Procesar y enviar la respuesta al cliente
         const polarizacionMatch = stdout.match(/Polarización total: ([\d.]+)/);
-        const movimientosMatch = stdout.match(/movimientos Totales: ([\d.]+)/);
+        const movimientosMatch = stdout.match(/Movimientos Totales: ([\d.]+)/);
         const matrizMov = stdout.match(/Distribución final de personas por opinión: \[(.*)\]/);
 
         if (polarizacionMatch && movimientosMatch && matrizMov) {
