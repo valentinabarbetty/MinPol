@@ -24,7 +24,7 @@ router.post('/minPol', (req, res) => {
 
     // Ruta al archivo .mzn de MiniZinc
     const minpolPath = path.join(__dirname, '..', 'minizinc', 'minpol.mzn');
-    const command = `minizinc --solver Gecode "${minpolPath}" data.dzn`;
+    const command = `minizinc --solver COIN-BC "${minpolPath}" data.dzn`;
 
     exec(command, (error, stdout, stderr) => {
         fs.unlinkSync('data.dzn'); // Eliminar el archivo de datos una vez ejecutado
