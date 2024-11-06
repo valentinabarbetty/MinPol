@@ -42,18 +42,27 @@ router.post('/minPol', (req, res) => {
         }
 
         // Procesar y enviar la respuesta al cliente
-        const polarizacionMatch = stdout.match(/Polarización total: ([\d.]+)/);
-        const movimientosMatch = stdout.match(/Movimientos Totales: ([\d.]+)/);
-        const matrizMov = stdout.match(/Distribución final de personas por opinión: \[(.*)\]/);
+        const polarizacionInicial2 = stdout.match(/Polarización inicial: ([\d.]+)/);
+        const polarizacionFinal2 = stdout.match(/Polarización final: ([\d.]+)/);
+        const movimientosMatch2 = stdout.match(/Movimientos Totales: ([\d.]+)/);
+        const costoTotal2 = stdout.match(/Costo total: ([\d.]+)/);
+        const matrizMov2 = stdout.match(/Distribución final de personas por opinión: \[(.*)\]/);
 
-        if (polarizacionMatch && movimientosMatch && matrizMov) {
-            const polarizacionTotal = parseFloat(polarizacionMatch[1]).toFixed(3);
-            const movimientosTotales = parseFloat(movimientosMatch[1]).toFixed(1);
-            const distribucionFinal = matrizMov[1].split(',').map(Number);
+
+        console.log("Resultado", stdout);
+        if (polarizacionInicial2 && polarizacionFinal2 && movimientosMatch2 && matrizMov2 && costoTotal2) {
+            const polarizacionInicial = parseFloat(polarizacionInicial2[1]).toFixed(3);
+            const polarizacionFinal = parseFloat(polarizacionFinal2[1]).toFixed(3);
+            const costoTotal = parseFloat(costoTotal2[1]).toFixed(1);
+            const movimientosTotales = parseFloat(movimientosMatch2[1]).toFixed(1);
+            const distribucionFinal = matrizMov2[1].split(',').map(Number);
             res.json({
-                polarizacion: polarizacionTotal,
-                movimientos: movimientosTotales,
-                distribucion: distribucionFinal
+                polarizacion_inicial: polarizacionInicial,
+                polarizacion_final: polarizacionFinal,
+                costo_total: costoTotal,
+                movimientos_totales: movimientosTotales,
+                distribucion_final: distribucionFinal,
+
             });
         } else {
             res.status(500).send('No se pudo encontrar el resultado en la salida de MiniZinc');

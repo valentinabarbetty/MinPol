@@ -7,8 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTabsModule } from '@angular/material/tabs'; // Importa MatTabsModule
-import { CommonModule } from '@angular/common'; // Importa CommonModule
+import { MatTabsModule } from '@angular/material/tabs'; 
+import { CommonModule } from '@angular/common'; 
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common'; // Importa CommonModule
     MatButtonModule,
     MatTooltipModule,
     MatTabsModule,
-    CommonModule // Asegúrate de incluir CommonModule
+    CommonModule 
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -30,13 +30,15 @@ import { CommonModule } from '@angular/common'; // Importa CommonModule
 export class AppComponent {
   title = 'min-pol';
   selectedFile: File | null = null;
-  parsedData: any = {}; // Almacena los datos extraídos del archivo
-  errorMessage: string = ''; // Para mostrar mensajes de error
+  parsedData: any = {}; 
+  errorMessage: string = ''; 
   resultadoMinizinc: string | null = null;
-  polarizacion: number | null = null; // Valor de polarización
-  movimientos: number | null = null;
-  distribucion: number[] | null = null;
 
+  polarizacion_inicial: number | null = null; 
+  polarizacion_final: number | null = null;
+  movimientos_totales: number | null = null;
+  distribucion_final: number[] | null = null;
+  costo_total: number | null = null;
   constructor(private minizincService: MinizincService) { }
 
   triggerFileInput() {
@@ -65,22 +67,14 @@ export class AppComponent {
       this.parsedData.distribucionOpiniones = content[2].split(',').map(Number);
       this.parsedData.valoresOpiniones = content[3].split(',').map(Number);
       this.parsedData.costosExtras = content[4].split(',').map(Number);
-
-      // Matriz de costos de desplazamiento
       this.parsedData.costosDesplazamiento = [];
       for (let i = 0; i < this.parsedData.numOpiniones; i++) {
         this.parsedData.costosDesplazamiento.push(
           content[5 + i].split(',').map(Number)
         );
       }
-
-      // Costo total máximo permitido
       this.parsedData.costoTotalMax = parseFloat(content[5 + this.parsedData.numOpiniones]);
-
-      // Número máximo de movimientos permitidos
       this.parsedData.maxMovimientos = parseInt(content[6 + this.parsedData.numOpiniones]);
-
-      // Resetear mensajes de error
       this.errorMessage = '';
     } catch (error) {
       this.errorMessage = 'Error al procesar el archivo. Verifica el formato.';
@@ -90,9 +84,13 @@ export class AppComponent {
   ejecutarMinizinc() {
     this.minizincService.ejecutarMinizinc(this.parsedData).subscribe({
       next: (response) => {
-        this.polarizacion = response.polarizacion;
-        this.movimientos = response.movimientos;
-        this.distribucion = response.distribucion;
+        console.log('Respuesta de MiniZinc:', response);
+        // Asignar los datos recibidos desde el backend
+        this.polarizacion_inicial = response.polarizacion_inicial;
+        this.polarizacion_final = response.polarizacion_final;
+        this.movimientos_totales = response.movimientos_totales;
+        this.costo_total = response.costo_total;
+        this.distribucion_final = response.distribucion_final;
       },
       error: (err) => {
         console.error('Error al ejecutar MiniZinc:', err);

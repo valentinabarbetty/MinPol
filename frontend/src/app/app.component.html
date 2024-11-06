@@ -111,11 +111,14 @@
       <mat-icon class="tab-icon">check_circle</mat-icon>
       Resultado
     </ng-template>
-    <div *ngIf="polarizacion !== null && movimientos !== null && distribucion !== null">
+  
+    <div *ngIf="polarizacion_inicial !== null && movimientos_totales !== null && distribucion_final !== null">
       <h3>Resultado de MiniZinc</h3>
-      <p><strong>Polarización mínima:</strong> {{ polarizacion }}</p>
-      <p><strong>Movimientos totales:</strong> {{ movimientos }}</p>
-      
+      <p><strong>Polarización inicial:</strong> {{ polarizacion_inicial }}</p>
+      <p><strong>Polarización final:</strong> {{ polarizacion_final }}</p>
+      <p><strong>Movimientos totales:</strong> {{ movimientos_totales }}</p>
+      <p><strong>Costo total:</strong> {{ costo_total }}</p>
+  
       <h4>Distribución final de personas por opinión</h4>
       <table>
         <thead>
@@ -125,14 +128,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let valor of distribucion; let i = index">
+          <tr *ngFor="let valor of distribucion_final; let i = index">
             <td>Opinión {{ i + 1 }}</td>
             <td>{{ valor }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    
+  
+    <div *ngIf="errorMessage">
+      <p class="error-message">{{ errorMessage }}</p>
+    </div>
   </mat-tab>
+  
 </mat-tab-group>
 <router-outlet></router-outlet>
