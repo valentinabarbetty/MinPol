@@ -58,6 +58,7 @@ constraint forall(i in 1..m)(x[i, i] = 0);
 % Restricción: La cantidad total de personas en la nueva distribución no puede exceder n
 constraint personaOpinion <= n;
 
+constraint forall(i, j in 1..m where v[i] = v[j])(x[i, j] = 0);
 
 % =========================== RESTRICCIONES DE NO NEGATIVIDAD ===========================
 % Asegura que las variables de costo y movimientos totales sean no negativas
@@ -88,18 +89,40 @@ function float: calcular_mediana_ponderada(array[int] of int: p_actual, array[in
 
 % =========================== FUNCIÓN OBJETIVO ===========================
 % Calcula la polarización total como suma ponderada de las diferencias absolutas
+var float: mediana_inicial = calcular_mediana_ponderada(p, v);
+var float: polarizacion_inicial = sum(i in 1..m)(p[i] * abs(v[i] - mediana_inicial));
+
+
+
 var float: nueva_mediana_ponderada = calcular_mediana_ponderada(p, v);
 var float: polarizacion = sum(i in 1..m)(nueva_p[i] * abs(v[i] - nueva_mediana_ponderada));
+
+
 
 
 % Objetivo: Minimizar la polarización total
 solve minimize polarizacion;
 
 % =========================== SALIDA ===========================
+%output [
+%    "Distribución final de personas por opinión: ", show(nueva_p), "\n",
+%    "Polarización total: ", show(polarizacion), "\n",
+%    "Movimientos Totales: ", show(movimientosTotales), "\n"
+%];
+
 output [
-    "Distribución final de personas por opinión: ", show(nueva_p), "\n",
-    "Polarización total: ", show(polarizacion), "\n",
-    "Movimientos Totales: ", show(movimientosTotales), "\n"
+    %if satisfy then
+        "Problema satisfactible\n",
+        "Distribución inicial de personas por opinión: ", show(p), "\n",
+        "Polarización inicial: ", show(polarizacion_inicial), "\n",
+        "Distribución final de personas por opinión: ", show(nueva_p), "\n",
+        "Polarización final: ", show(polarizacion), "\n",
+        "Movimientos Totales: ", show(movimientosTotales), "\n",
+        "Costo total: ", show(costo), "\n",
+        "x: ", show(x), "\n",
+    %else
+    %    "Problema insatisfactible\n"
+    %endif
 ];
 
 %output [
