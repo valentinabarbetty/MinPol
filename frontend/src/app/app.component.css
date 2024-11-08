@@ -18,7 +18,7 @@
     /* Las columnas estarán en fila (horizontales) */
     gap: 20px;
     /* Espacio entre las columnas */
-    margin-top: 20px;
+    margin-top: 50px;
     align-items: left !important;
 }
 
@@ -36,9 +36,15 @@
 }
 
 .columna-2 {
+    flex: 2;
+    margin-top: 150px;
     margin-bottom: 10px;
-    /* Espacio debajo del título */
-}
+    display: flex;              /* Establece el contenedor como flex */
+    justify-content: center;    /* Centra el contenido horizontalmente */
+    align-items: center;        /* Centra el contenido verticalmente */
+    height: 100%;
+    width: 100%;               /* Asegura que el contenedor tenga altura completa */
+  }
 
 .steps-container {
     display: flex;

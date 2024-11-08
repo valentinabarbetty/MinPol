@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewChecked, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MinizincService } from './minizinc.service';
@@ -11,7 +11,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
-
+import { NgApexchartsModule } from "ng-apexcharts";
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -26,6 +26,7 @@ import { ChartConfiguration } from 'chart.js';
     MatTabsModule,
     CommonModule,
     BaseChartDirective,
+    NgApexchartsModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -44,42 +45,73 @@ export class AppComponent {
   costo_total: number | null = null;
   constructor(private minizincService: MinizincService) {}
 
-  public barChartLegend = true;
-  public barChartPlugins = [];
+
   public p = [];
   public m = 0;
-  public barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: [],
-    datasets: [{ data: [], label: 'Distribución de Personas' }],
-  };
 
-  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-    },
-  };
-
-  updateChartData() {
-    // Actualiza las etiquetas y los datos del gráfico con la distribución de opiniones
-    this.barChartData.labels = Array.from(
-      { length: this.m },
-      (_, index) => `Opinión ${index + 1}`
-    );
-    this.barChartData.datasets[0].data = this.p;
-  }
 
   triggerFileInput() {
     document.getElementById('fileInput')?.click();
     // this.updateChartData();
   }
+  onTabChange(event: any) {
+    if (event.index === 0) { // La pestaña 0 es "Datos Cargados"
+     // this.updateChartData();
+    }
+  }
+  public chartOptions: any;
+  updateChartData() {
+    this.chartOptions = {
+      chart: {
+        type: 'bar', // Tipo de gráfico
+        height: 500, // Altura del gráfico más grande
+        width: 500, // Ajusta el gráfico al ancho completo
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          endingShape: 'flat',
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        categories: Array.from(
+          { length: this.m },
+          (_, index) => `Opinión ${index + 1}`
+        ), // Etiquetas basadas en 'm'
+        title: {
+          text: 'Opiniones', // Nombre del eje X
+          style: {
+            fontSize: '14px',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Valor', // Nombre del eje Y
+          style: {
+            fontSize: '14px',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+          },
+        },
+      },
+      series: [
+        {
+          name: 'Distribución de Opiniones',
+          data: this.p, // Datos basados en 'p'
+        },
+      ],
+      colors: ['#98bdea'], // Color personalizado para las barras
+    };
+  }
+
+
+
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];

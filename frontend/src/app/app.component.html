@@ -29,12 +29,14 @@
         <mat-icon class="tab-icon">upload</mat-icon>
         Datos Cargados
       </ng-template>
-      <div class="contenedor-columnas">
+      <h2 class="centered-title">Datos Cargados</h2>
 
-
+      <div class="contenedor-columnas" *ngIf="parsedData.numPersonas">
+        
+       
         <div class="columna">
           <div *ngIf="parsedData.numPersonas" class="data-display">
-            <h2 class="centered-title">Datos Cargados</h2>
+          
             <p><strong>Número de Personas:</strong> {{ parsedData.numPersonas }}</p>
             <p><strong>Número de Opiniones:</strong> {{ parsedData.numOpiniones }}</p>
 
@@ -59,9 +61,9 @@
                 </tbody>
               </table>
             </div>
-            
+
             <div>
-              
+
               <table class="styled-table">
                 <thead>
                   <tr>
@@ -140,12 +142,20 @@
             </p>
           </div>
         </div>
-        <div class="columna-2" *ngIf="parsedData.numPersonas" class="data-display">
-          <canvas baseChart [datasets]="barChartData.datasets" [labels]="barChartData.labels"
-            [options]="barChartOptions" [type]="'bar'" class="canva-bar">
-          </canvas>
-
+        <div class="columna-2" *ngIf="parsedData.numPersonas" id="chart">
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [dataLabels]="chartOptions.dataLabels"
+            [plotOptions]="chartOptions.plotOptions"
+            [yaxis]="chartOptions.yaxis"
+            [xaxis]="chartOptions.xaxis"
+            [title]="chartOptions.title"
+            [colors]="chartOptions.colors"
+          ></apx-chart>
         </div>
+        
+
       </div>
     </mat-tab>
 
