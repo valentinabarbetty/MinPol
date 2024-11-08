@@ -21,22 +21,32 @@
     margin-top: 50px;
     align-items: left !important;
 }
-
+.contenedor-final {
+    display: flex;
+    justify-content: center; /* Centers the content horizontally */
+    align-items: center; /* Centers the content vertically, if needed */
+    margin: 0 auto; /* Automatically adjusts side margins to center */
+    max-width: 100%; /* Adjusts to the screen size */
+  }
 .columna {
-    flex: 1;
+
     /* Las columnas tomarán el mismo ancho disponible */
     padding: 15px;
    
     /* Opcional, para agregar borde a las columnas */
     /* Fondo opcional */
 }
-
+.tabla-centrada {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0; /* Ajusta el margen según lo necesites */
+  }
 .canva-bar {
     width: 550px;
 }
 
 .columna-2 {
-    flex: 2;
     margin-top: 150px;
     margin-bottom: 10px;
     display: flex;              /* Establece el contenedor como flex */
@@ -45,7 +55,10 @@
     height: 100%;
     width: 100%;               /* Asegura que el contenedor tenga altura completa */
   }
-
+  .columna-2-final {
+    align-items: center;
+    padding: 15px;       /* Asegura que el contenedor tenga altura completa */
+  }
 .steps-container {
     display: flex;
     flex-wrap: wrap;
@@ -79,6 +92,9 @@
 .centered-title {
     text-align: center;
     font-size: 30px;
+    align-items: center !important;
+    justify-content: center !important; /* Centers the content horizontally */
+
 }
 
 .styled-table {

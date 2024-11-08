@@ -48,7 +48,7 @@ export class AppComponent {
 
   public p = [];
   public m = 0;
-
+  
 
   triggerFileInput() {
     document.getElementById('fileInput')?.click();
@@ -59,7 +59,11 @@ export class AppComponent {
      // this.updateChartData();
     }
   }
+  criterios = ["Movimientos", "Costo", "Polarización"];
+  valores_maximos: number[] = [];
+  valores_finales: number[] = [];
   public chartOptions: any;
+  public chartOptions_final: any;
   updateChartData() {
     this.chartOptions = {
       chart: {
@@ -110,7 +114,55 @@ export class AppComponent {
     };
   }
 
-
+  updateChartDataFinal() {
+    this.chartOptions_final = {
+      chart: {
+        type: 'bar', // Tipo de gráfico
+        height: 500, // Altura del gráfico más grande
+        width: 500, // Ajusta el gráfico al ancho completo
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          endingShape: 'flat',
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        categories: Array.from(
+          { length: this.m },
+          (_, index) => `Opinión ${index + 1}`
+        ), // Etiquetas basadas en 'm'
+        title: {
+          text: 'Opiniones', // Nombre del eje X
+          style: {
+            fontSize: '14px',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: 'Valor', // Nombre del eje Y
+          style: {
+            fontSize: '14px',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+          },
+        },
+      },
+      series: [
+        {
+          name: 'Distribución de Opiniones',
+          data: this.distribucion_final, // Datos basados en 'p'
+        },
+      ],
+      colors: ['#b4d6ba'], // Color personalizado para las barras
+    };
+  }
 
 
   onFileSelected(event: any) {
@@ -166,6 +218,9 @@ export class AppComponent {
         this.costo_total = response.costo_total;
         this.distribucion_final = response.distribucion_final;
         console.log('Distribución Final:', this.distribucion_final); // Verifica los datos
+        this.valores_maximos = [this.parsedData.maxMovimientos, this.parsedData.costoTotalMax, this.polarizacion_inicial];
+        this.valores_finales = [this.movimientos_totales, this.costo_total, this.polarizacion_final];
+        this.updateChartDataFinal();
       },
       error: (err) => {
         console.error('Error al ejecutar MiniZinc:', err);
