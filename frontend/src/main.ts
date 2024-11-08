@@ -6,6 +6,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 bootstrapApplication(AppComponent, {
-  providers: [importProvidersFrom(HttpClientModule), provideAnimationsAsync(), provideAnimationsAsync(), provideCharts(withDefaultRegisterables())],
+  providers: [importProvidersFrom(HttpClientModule), provideAnimationsAsync(), provideAnimationsAsync(), provideCharts(withDefaultRegisterables()), provideAnimationsAsync()],
 })
 .catch((err) => console.error(err));

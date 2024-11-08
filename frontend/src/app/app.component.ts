@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { NgApexchartsModule } from "ng-apexcharts";
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -25,8 +26,8 @@ import { NgApexchartsModule } from "ng-apexcharts";
     MatTooltipModule,
     MatTabsModule,
     CommonModule,
-    BaseChartDirective,
     NgApexchartsModule,
+
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
@@ -43,9 +44,10 @@ export class AppComponent {
   movimientos_totales: number | null = null;
   distribucion_final: number[] | null = null;
   costo_total: number | null = null;
+  isProcessing: boolean = false;
   @ViewChild('tabGroup', { static: false }) tabGroup: MatTabGroup | undefined;
 
-  constructor(private minizincService: MinizincService) {}
+  constructor(private minizincService: MinizincService,) {}
 
 
   public p = [];
@@ -55,11 +57,10 @@ export class AppComponent {
 
   triggerFileInput() {
     document.getElementById('fileInput')?.click();
-    // this.updateChartData();
   }
+
   onTabChange(event: any) {
-    if (event.index === 0) { // La pestaña 0 es "Datos Cargados"
-     // this.updateChartData();
+    if (event.index === 0) {
     }
   }
   criterios = ["Movimientos", "Costo", "Polarización"];
@@ -67,6 +68,7 @@ export class AppComponent {
   valores_finales: number[] = [];
   public chartOptions: any;
   public chartOptions_final: any;
+
   updateChartData() {
     this.chartOptions = {
       chart: {
@@ -87,9 +89,9 @@ export class AppComponent {
         categories: Array.from(
           { length: this.m },
           (_, index) => `Opinión ${index + 1}`
-        ), // Etiquetas basadas en 'm'
+        ),
         title: {
-          text: 'Opiniones', // Nombre del eje X
+          text: 'Opiniones',
           style: {
             fontSize: '14px',
             fontWeight: 'bold',
@@ -99,7 +101,7 @@ export class AppComponent {
       },
       yaxis: {
         title: {
-          text: 'Valor', // Nombre del eje Y
+          text: 'Valor',
           style: {
             fontSize: '14px',
             fontWeight: 'bold',
@@ -110,19 +112,19 @@ export class AppComponent {
       series: [
         {
           name: 'Distribución de Opiniones',
-          data: this.p, // Datos basados en 'p'
+          data: this.p,
         },
       ],
-      colors: ['#98bdea'], // Color personalizado para las barras
+      colors: ['#98bdea'],
     };
   }
 
   updateChartDataFinal() {
     this.chartOptions_final = {
       chart: {
-        type: 'bar', // Tipo de gráfico
-        height: 500, // Altura del gráfico más grande
-        width: 500, // Ajusta el gráfico al ancho completo
+        type: 'bar',
+        height: 500,
+        width: 500,
       },
       plotOptions: {
         bar: {
@@ -167,7 +169,6 @@ export class AppComponent {
     };
   }
 
-
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     this.selectedFile = file;
@@ -193,7 +194,7 @@ export class AppComponent {
       this.parsedData.valoresOpiniones = content[3].split(',').map(Number);
       this.parsedData.costosExtras = content[4].split(',').map(Number);
       this.parsedData.costosDesplazamiento = [];
-      
+
       for (let i = 0; i < this.parsedData.numOpiniones; i++) {
         this.parsedData.costosDesplazamiento.push(
           content[5 + i].split(',').map(Number)
@@ -212,10 +213,22 @@ export class AppComponent {
     }
   }
   x: number[][] = [];
+
+
   ejecutarMinizinc() {
+    // Si ya hay una solicitud en proceso, no permitas otra
+    if (this.isProcessing) {
+     // this.processingMessage = 'La solicitud ya está en proceso. Por favor, espera.';
+      return;
+    }
+
+    this.isProcessing = true;
+    this.btn_procesar = false;
+
     this.minizincService.ejecutarMinizinc(this.parsedData).subscribe({
       next: (response) => {
         console.log('Respuesta de MiniZinc:', response);
+        // Procesa la respuesta...
         this.polarizacion_inicial = response.polarizacion_inicial;
         this.polarizacion_final = response.polarizacion_final;
         this.movimientos_totales = response.movimientos_totales;
@@ -223,11 +236,11 @@ export class AppComponent {
         this.distribucion_final = response.distribucion_final;
         this.x = response.movimientos_realizados;
         this.numOpinionesArray = Array.from({ length: this.parsedData.numOpiniones }, (_, i) => i);
-        console.log("x", this.x)
-       // console.log('Distribución Final:', this.distribucion_final); // Verifica los datos
+
         this.valores_maximos = [this.parsedData.maxMovimientos, this.parsedData.costoTotalMax, this.polarizacion_inicial];
         this.valores_finales = [this.movimientos_totales, this.costo_total, this.polarizacion_final];
         this.updateChartDataFinal();
+
         if (this.tabGroup) {
           this.tabGroup.selectedIndex = 1;
         }
@@ -235,6 +248,12 @@ export class AppComponent {
       error: (err) => {
         console.error('Error al ejecutar MiniZinc:', err);
       },
+      complete: () => {
+
+        this.isProcessing = false;
+        this.btn_procesar = true;
+      }
     });
   }
+
 }

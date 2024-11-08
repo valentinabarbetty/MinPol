@@ -32,7 +32,7 @@
 
     /* Las columnas tomarán el mismo ancho disponible */
     padding: 15px;
-   
+
     /* Opcional, para agregar borde a las columnas */
     /* Fondo opcional */
 }
@@ -154,4 +154,19 @@
         flex-direction: column;
         align-items: center;
     }
+}
+
+.button-disabled {
+  background-color: grey !important;
+  color: white !important;
+}
+
+.button-enabled {
+  background-color: #3f51b5 !important; /* Color azul predeterminado de Material Design */
+  color: white !important;
+}
+.processing-message {
+  margin-top: 10px;
+  color: #1976d2; /* Azul acorde con el botón */
+  font-weight: bold;
 }
