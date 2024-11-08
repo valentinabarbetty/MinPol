@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component } from '@angular/core';
+import { AfterViewChecked, Component, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MinizincService } from './minizinc.service';
@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
@@ -43,13 +43,14 @@ export class AppComponent {
   movimientos_totales: number | null = null;
   distribucion_final: number[] | null = null;
   costo_total: number | null = null;
+  @ViewChild('tabGroup', { static: false }) tabGroup: MatTabGroup | undefined;
 
   constructor(private minizincService: MinizincService) {}
 
 
   public p = [];
   public m = 0;
-  
+  btn_procesar: boolean = false;
   numOpinionesArray: number[] = [];
 
   triggerFileInput() {
@@ -176,6 +177,7 @@ export class AppComponent {
       reader.onload = (e) => {
         const content = (e.target?.result as string).split('\n');
         this.parseFileContent(content);
+        this.btn_procesar = true;
       };
       reader.readAsText(file);
     }
@@ -226,6 +228,9 @@ export class AppComponent {
         this.valores_maximos = [this.parsedData.maxMovimientos, this.parsedData.costoTotalMax, this.polarizacion_inicial];
         this.valores_finales = [this.movimientos_totales, this.costo_total, this.polarizacion_final];
         this.updateChartDataFinal();
+        if (this.tabGroup) {
+          this.tabGroup.selectedIndex = 1;
+        }
       },
       error: (err) => {
         console.error('Error al ejecutar MiniZinc:', err);
