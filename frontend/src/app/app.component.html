@@ -50,7 +50,7 @@
                   </tr>
                   <tr>
                     <th>Opinión</th>
-                    <th>Valor</th>
+                    <th>Número de Personas</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -214,12 +214,12 @@
               <thead>
                 <tr>
                   <th colspan="2" style="text-align: center; font-weight: bold;">
-                    Distribución de Inicial Personas por Opinión
+                    Distribución Inicial de Personas por Opinión
                   </th>
                 </tr>
                 <tr>
                   <th>Opinión</th>
-                  <th>Valor</th>
+                  <th>Número de Personas</th>
                 </tr>
               </thead>
               <tbody>
@@ -241,7 +241,7 @@
                 </tr>
                 <tr>
                   <th>Opinión</th>
-                  <th>Valor</th>
+                  <th>Número de Personas</th>
                 </tr>
               </thead>
               <tbody>
@@ -258,6 +258,39 @@
 
 
       </div>
+
+      <div style="display: flex; justify-content: center !important;">
+        
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th [attr.colspan]="parsedData.numOpiniones + 1" style="text-align: center; font-weight: bold;">
+                Movimientos entre Opiniones
+              </th>
+            </tr>
+            <tr>
+              <!-- Columna inicial vacía o con el texto "Opiniones" -->
+              <th>Opiniones</th>
+              <!-- Encabezados dinámicos de las columnas -->
+              <th *ngFor="let colIndex of numOpinionesArray">
+                Opinión {{ colIndex + 1 }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filas dinámicas con encabezado de fila y valores de la matriz -->
+            <tr *ngFor="let row of x; let rowIndex = index">
+              <!-- Primera columna de cada fila con el nombre de la fila -->
+              <td>Opinión {{ rowIndex + 1 }}</td>
+              <!-- Celdas de la matriz -->
+              <td *ngFor="let cell of row">{{ cell }}</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        
+      </div>
+      
       <div *ngIf="errorMessage">
         <p class="error-message">{{ errorMessage }}</p>
       </div>

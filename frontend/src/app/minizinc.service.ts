@@ -16,14 +16,16 @@ export class MinizincService {
     polarizacion_final: number, 
     movimientos_totales: number, 
     costo_total: number,  
-    distribucion_final: number[]
+    distribucion_final: number[],
+    movimientos_realizados: any[]
   }> {
     return this.http.post<{
       polarizacion_inicial: number, 
       polarizacion_final: number, 
       movimientos_totales: number, 
       costo_total: number, 
-      distribucion_final: number[]
+      distribucion_final: number[],
+      movimientos_realizados: any[]
     }>(this.apiUrl, data)
       .pipe(
         catchError(this.handleError)

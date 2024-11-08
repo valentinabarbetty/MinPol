@@ -43,12 +43,14 @@ export class AppComponent {
   movimientos_totales: number | null = null;
   distribucion_final: number[] | null = null;
   costo_total: number | null = null;
+
   constructor(private minizincService: MinizincService) {}
 
 
   public p = [];
   public m = 0;
   
+  numOpinionesArray: number[] = [];
 
   triggerFileInput() {
     document.getElementById('fileInput')?.click();
@@ -207,7 +209,7 @@ export class AppComponent {
       this.errorMessage = 'Error al procesar el archivo. Verifica el formato.';
     }
   }
-
+  x: number[][] = [];
   ejecutarMinizinc() {
     this.minizincService.ejecutarMinizinc(this.parsedData).subscribe({
       next: (response) => {
@@ -217,7 +219,10 @@ export class AppComponent {
         this.movimientos_totales = response.movimientos_totales;
         this.costo_total = response.costo_total;
         this.distribucion_final = response.distribucion_final;
-        console.log('Distribución Final:', this.distribucion_final); // Verifica los datos
+        this.x = response.movimientos_realizados;
+        this.numOpinionesArray = Array.from({ length: this.parsedData.numOpiniones }, (_, i) => i);
+        console.log("x", this.x)
+       // console.log('Distribución Final:', this.distribucion_final); // Verifica los datos
         this.valores_maximos = [this.parsedData.maxMovimientos, this.parsedData.costoTotalMax, this.polarizacion_inicial];
         this.valores_finales = [this.movimientos_totales, this.costo_total, this.polarizacion_final];
         this.updateChartDataFinal();

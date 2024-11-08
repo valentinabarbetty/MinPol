@@ -118,7 +118,8 @@ output [
         "Distribución final de personas por opinión: ", show(nueva_p), "\n",
         "Polarización final: ", show(polarizacion), "\n",
         "Movimientos Totales: ", show(movimientosTotales), "\n",
-        "Costo total: ", show(costo), "\n"
+        "Costo total: ", show(costo), "\n",
+        "Movimientos realizados: ", show(x), "\n"
     %else
     %    "Problema insatisfactible\n"
     %endif
