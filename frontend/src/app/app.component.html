@@ -10,16 +10,26 @@
         <mat-icon>upload</mat-icon>
         Subir Archivo
       </button>
+      
       <div *ngIf="selectedFile" class="file-info">
         Archivo seleccionado: {{ selectedFile.name }}
       </div>
     </div>
 
-    <!-- Botón procesar, deshabilitado hasta que se suba un archivo -->
-    <button mat-raised-button color="primary" class="square-button" (click)="ejecutarMinizinc()">
+    <!-- Botón procesar, cambia de color cuando se habilita/deshabilita -->
+    <button
+      mat-raised-button
+      color="primary"
+      class="square-button"
+      (click)="ejecutarMinizinc()"
+      [disabled]="!btn_procesar"
+      [ngClass]="btn_procesar ? 'button-enabled' : 'button-disabled'"
+    >
+      <mat-icon>play_arrow</mat-icon>
       Procesar
     </button>
   </div>
+
 
 
 
@@ -188,7 +198,7 @@
         </div>
         <div class="contenedor-final"
           *ngIf="polarizacion_inicial !== null && movimientos_totales !== null && distribucion_final !== null">
-       
+
             <div class="columna-2-final" id="chart">
               <!-- Gráfico con datos iniciales -->
               <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
@@ -203,10 +213,10 @@
                 [yaxis]="chartOptions_final.yaxis" [xaxis]="chartOptions_final.xaxis" [title]="chartOptions_final.title"
                 [colors]="chartOptions_final.colors"></apx-chart>
             </div>
-         
+
         </div>
         <div class="contenedor-final">
-          
+
 
 
           <div class="columna-2-final">
@@ -260,7 +270,7 @@
       </div>
 
       <div style="display: flex; justify-content: center !important;"  *ngIf="polarizacion_inicial !== null && movimientos_totales !== null && distribucion_final !== null">
-        
+
         <table class="styled-table">
           <thead>
             <tr>
@@ -287,10 +297,10 @@
             </tr>
           </tbody>
         </table>
-        
-        
+
+
       </div>
-      
+
       <div *ngIf="errorMessage">
         <p class="error-message">{{ errorMessage }}</p>
       </div>
