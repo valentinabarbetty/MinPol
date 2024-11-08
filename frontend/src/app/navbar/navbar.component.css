@@ -1,4 +1,3 @@
-/* navbar.component.css */
 .header {
   display: flex;
   justify-content: space-between;
@@ -15,7 +14,7 @@
   font-weight: bold;
   text-align: center;
   flex: 1;
-  font-family: 'Roboto', sans-serif; /* Aplica la fuente Roboto */
+  font-family: 'Roboto', sans-serif; 
 }
 
 .icon {
@@ -25,10 +24,10 @@
 }
 
 .square-button {
-  width: 50px; /* Ajusta el tamaño según lo necesites */
-  height: 50px; /* Ajusta el tamaño según lo necesites */
-  padding: 0; /* Elimina el padding predeterminado */
-  border-radius: 0; /* Elimina el borde redondeado */
-  font-weight: bold; /* Hace que el texto sea negrita */
-  color: black !important; /* Cambia el color del texto y usa !important */
+  width: 50px; 
+  height: 50px; 
+  padding: 0; 
+  border-radius: 0; 
+  font-weight: bold; 
+  color: black !important; 
 }

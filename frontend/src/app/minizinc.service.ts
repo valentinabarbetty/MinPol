@@ -11,8 +11,20 @@ export class MinizincService {
 
   constructor(private http: HttpClient) { }
 
-  ejecutarMinizinc(data: any): Observable<{ polarizacion: number, movimientos: number, distribucion: number[] }> {
-    return this.http.post<{ polarizacion: number, movimientos: number, distribucion: number[] }>(this.apiUrl, data)
+  ejecutarMinizinc(data: any): Observable<{
+    polarizacion_inicial: number, 
+    polarizacion_final: number, 
+    movimientos_totales: number, 
+    costo_total: number,  
+    distribucion_final: number[]
+  }> {
+    return this.http.post<{
+      polarizacion_inicial: number, 
+      polarizacion_final: number, 
+      movimientos_totales: number, 
+      costo_total: number, 
+      distribucion_final: number[]
+    }>(this.apiUrl, data)
       .pipe(
         catchError(this.handleError)
       );

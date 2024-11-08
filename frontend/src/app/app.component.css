@@ -1,49 +1,135 @@
 .square-button {
-    width: 100%; /* Ajusta el ancho al 100% para que sea responsivo */
-    max-width: 170px; /* Limita el ancho máximo */
-    height: 50px; /* Ajusta el tamaño según tus necesidades */
-    border-radius: 0; /* Para un borde cuadrado */
-    color: black; 
+    width: 100%;
+    max-width: 170px;
+    height: 50px;
+    border-radius: 20px;
+    color: black;
+    padding: 20px;
+}
+
+.contenedor {
+    margin: 20px;
+    /* Espacio exterior */
+}
+
+.contenedor-columnas {
+    display: flex;
+    flex-direction: row;
+    /* Las columnas estarán en fila (horizontales) */
+    gap: 20px;
+    /* Espacio entre las columnas */
+    margin-top: 20px;
+    align-items: left !important;
+}
+
+.columna {
+    flex: 1;
+    /* Las columnas tomarán el mismo ancho disponible */
+    padding: 15px;
+   
+    /* Opcional, para agregar borde a las columnas */
+    /* Fondo opcional */
+}
+
+.canva-bar {
+    width: 550px;
+}
+
+.columna-2 {
+    margin-bottom: 10px;
+    /* Espacio debajo del título */
 }
 
 .steps-container {
     display: flex;
-    flex-wrap: wrap; /* Permite que los elementos se muevan a la siguiente línea si es necesario */
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 20px; /* Espaciado entre elementos */
+    gap: 20px;
     margin-top: 20px;
 }
 
 .upload-section {
-    max-width: 170px; 
-    width: 100%; 
+    max-width: 170px;
+    width: 100%;
     display: flex;
-    flex-direction: column; /* Apila el botón y la información del archivo verticalmente */
-    align-items: center; /* Centra los elementos en el eje horizontal */
+    flex-direction: column;
+    align-items: center;
 }
 
 .file-info {
-    margin-top: 10px; /* Espacio entre el botón y la información del archivo */
-    text-align: center; /* Centra el texto */
+    margin-top: 10px;
+    text-align: center;
 }
 
 .tab-group {
-    margin-top: 40px; /* Margen superior */
-    width: 100%; /* Ajusta el ancho al 100% */
+    margin-top: 40px;
+    width: 100%;
 }
 
 .tab-icon {
-    margin-right: 8px; /* Espacio entre el ícono y el texto en los tabs */
+    margin-right: 8px;
 }
 
-/* Ajustes de media queries para pantallas más pequeñas */
+.centered-title {
+    text-align: center;
+    font-size: 30px;
+}
+
+.styled-table {
+    width: 100%;
+    max-width: 400px;
+    /* Limita el ancho máximo de las tablas */
+    border-collapse: collapse;
+    margin: 10px 0; /* Elimina el centrado (cambia auto por 0) */
+    font-size: 14px; /* Disminuye el tamaño de la fuente */
+    text-align: left; /* Alinea el texto a la izquierda */
+}
+.table-title {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 0;
+  }
+.styled-table th,
+.styled-table td {
+    padding: 8px 10px;
+    /* Reduce el padding de las celdas */
+}
+
+.styled-table th {
+    /* Color de fondo para el encabezado */
+
+    font-size: 16px;
+    /* Tamaño de fuente ligeramente más grande para los encabezados */
+}
+
+.styled-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+    /* Fondo alterno para filas pares */
+}
+
+.styled-table tr:hover {
+    background-color: #ddd;
+    /* Resalta la fila al pasar el mouse */
+}
+
+.styled-table td,
+.styled-table th {
+    border: 1px solid #ddd;
+    /* Bordes de las celdas */
+}
+
 @media (max-width: 600px) {
-    .square-button {
-        width: 100%; /* Botones ocupan todo el ancho en pantallas pequeñas */
+    .styled-table {
+        max-width: 100%;
+        /* Se ajusta al 100% del ancho en pantallas pequeñas */
     }
-    
+
+    .square-button {
+        width: 100%;
+    }
+
     .steps-container {
-        flex-direction: column; /* Apila los elementos verticalmente en pantallas pequeñas */
-        align-items: center; /* Centra los elementos */
+        flex-direction: column;
+        align-items: center;
     }
 }
