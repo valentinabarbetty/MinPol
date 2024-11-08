@@ -186,9 +186,27 @@
             </tbody>
           </table>
         </div>
-
+        <div class="contenedor-final"
+          *ngIf="polarizacion_inicial !== null && movimientos_totales !== null && distribucion_final !== null">
+       
+            <div class="columna-2-final" id="chart">
+              <!-- Gráfico con datos iniciales -->
+              <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
+                [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis" [title]="chartOptions.title"
+                [colors]="chartOptions.colors"></apx-chart>
+            </div>
+            <div class="columna-2-final" id="chart-final">
+              <!-- Gráfico con datos finales -->
+              <apx-chart [series]="chartOptions_final.series" [chart]="chartOptions_final.chart"
+                [dataLabels]="chartOptions_final.dataLabels" [plotOptions]="chartOptions_final.plotOptions"
+                [yaxis]="chartOptions_final.yaxis" [xaxis]="chartOptions_final.xaxis" [title]="chartOptions_final.title"
+                [colors]="chartOptions_final.colors"></apx-chart>
+            </div>
+         
+        </div>
         <div class="contenedor-final">
-
+          
 
 
           <div class="columna-2-final">
@@ -213,13 +231,6 @@
             </table>
 
           </div>
-          <div style=" align-items: flex-start;" id="chart">
-            <!-- Gráfico con datos iniciales -->
-            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-              [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
-              [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis" [title]="chartOptions.title"
-              [colors]="chartOptions.colors"></apx-chart>
-          </div>
           <div class="columna-2-final">
             <table class="styled-table">
               <thead>
@@ -241,14 +252,6 @@
               </tbody>
             </table>
           </div>
-          <div  style=" align-items: flex-start !important;" id="chart-final">
-            <!-- Gráfico con datos finales -->
-            <apx-chart [series]="chartOptions_final.series" [chart]="chartOptions_final.chart"
-              [dataLabels]="chartOptions_final.dataLabels" [plotOptions]="chartOptions_final.plotOptions"
-              [yaxis]="chartOptions_final.yaxis" [xaxis]="chartOptions_final.xaxis" [title]="chartOptions_final.title"
-              [colors]="chartOptions_final.colors"></apx-chart>
-          </div>
-
 
         </div>
 
