@@ -33,7 +33,8 @@ router.post("/minPol", (req, res) => {
   const minpolPath = path.join(__dirname, "..", "minizinc", "minpol.mzn");
   const timeoutDuration = 420000;
   const timeLimit = Math.floor(timeoutDuration / 1000);
-  const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
+  //const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
+  const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
 
   const execProcess = exec(command, (error, stdout, stderr) => {
     clearTimeout(timeout);
