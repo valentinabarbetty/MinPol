@@ -5,7 +5,6 @@ RUN apt-get update && apt-get install -y \
     wget \
     build-essential \
     coinor-cbc \
-    # Instalar dependencias adicionales para MiniZinc si son necesarias
     curl \
     unzip
 
@@ -16,9 +15,12 @@ RUN wget https://github.com/MiniZinc/MiniZincIDE/archive/refs/tags/2.8.7.tar.gz 
     # Verifica el contenido del directorio para asegurar que MiniZinc se haya descargado correctamente
     && ls -R /opt/minizinc/
 
-# Asegúrate de que minizinc esté accesible desde cualquier lugar (por ejemplo, añadiendo a PATH)
+# Verifica si el binario de minizinc está en la ubicación esperada
+RUN ls /opt/minizinc/bin/
+
+# Asegúrate de que minizinc esté accesible desde cualquier lugar
 RUN ln -s /opt/minizinc/bin/minizinc /usr/local/bin/minizinc \
-    # Verifica si el binario de minizinc está correctamente enlazado
+    # Verifica que minizinc esté correctamente enlazado y accesible
     && minizinc --version
 
 # Verifica si minizinc está presente y en qué ubicación
