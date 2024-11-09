@@ -29,6 +29,7 @@ router.post("/minPol", (req, res) => {
         maxM = ${maxMovimientos};
     `;
   fs.writeFileSync("data.dzn", dataContent);
+  console.log("Archivo data.dzn creado con los siguientes contenidos:", dataContent);
 
   const minpolPath = path.join(__dirname, "..", "minizinc", "minpol.mzn");
   // Verifica si el archivo existe
@@ -36,6 +37,7 @@ if (!fs.existsSync(minpolPath)) {
   console.error("El archivo minpol.mzn no existe en la ruta especificada:", minpolPath);
   return res.status(500).send("Archivo minpol.mzn no encontrado");
 }
+console.log("Ruta al archivo minpol.mzn:", minpolPath);
 
   const timeoutDuration = 420000;
   const timeLimit = Math.floor(timeoutDuration / 1000);
