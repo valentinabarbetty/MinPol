@@ -16,7 +16,7 @@ RUN wget https://github.com/MiniZinc/MiniZincIDE/archive/refs/tags/2.8.7.tar.gz 
     && ls -R /opt/minizinc/
 
 # Verifica si el binario de minizinc está en la ubicación esperada
-RUN ls /opt/minizinc/bin/
+RUN ls /opt/minizinc/
 
 # Asegúrate de que minizinc esté accesible desde cualquier lugar
 RUN ln -s /opt/minizinc/bin/minizinc /usr/local/bin/minizinc \
