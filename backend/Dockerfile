@@ -31,9 +31,9 @@ RUN echo "Creando enlace simbólico para minizinc..." \
     && echo "Enlace simbólico creado, verificando minizinc --version..." \
     && minizinc --version
 
-# Buscar y eliminar cualquier archivo llamado count.mzn si existe
+# Buscar y eliminar cualquier archivo llamado count.mzn si existe, excluyendo /proc, /sys y /dev
 RUN echo "Buscando y eliminando archivos count.mzn si existen..." \
-    && find / -name "count.mzn" -exec rm -f {} + \
+    && find / -path /proc -prune -o -path /sys -prune -o -path /dev -prune -o -name "count.mzn" -exec rm -f {} + \
     && echo "Búsqueda y eliminación de count.mzn completada."
 
 # Configuración de tu aplicación
