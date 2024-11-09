@@ -6,7 +6,13 @@ RUN apt-get update && apt-get install -y minizinc \
     build-essential \
     coinor-cbc \
     curl \
-    unzip
+    coinor-cbc \
+    unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y minizinc \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # Verifica si minizinc se instaló correctamente en el sistema
 RUN echo "Verificando si minizinc está instalado:" && which minizinc
