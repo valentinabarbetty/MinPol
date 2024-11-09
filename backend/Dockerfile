@@ -6,13 +6,8 @@ RUN apt-get update && apt-get install -y minizinc \
     build-essential \
     coinor-cbc \
     curl \
-    coinor-cbc \
     unzip && \
     rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && apt-get install -y minizinc \
-    && rm -rf /var/lib/apt/lists/*
-
 
 # Verifica si minizinc se instaló correctamente en el sistema
 RUN echo "Verificando si minizinc está instalado:" && which minizinc
@@ -26,10 +21,6 @@ RUN wget https://github.com/MiniZinc/MiniZincIDE/archive/refs/tags/2.8.7.tar.gz 
     && ls -R /opt/minizinc/ \
     && echo "MiniZinc IDE descargado e instalado en /opt/minizinc"
 
-# Verifica si el binario de minizinc está en la ubicación esperada
-RUN echo "Verificando archivos en /opt/minizinc/..." && ls /opt/minizinc/ \
-    && echo "Comprobando la ubicación de minizinc..."
-
 # Verifica la estructura de directorios y si el binario minizinc está dentro de /opt/minizinc
 RUN echo "Verificando la estructura completa de /opt/minizinc..." \
     && find /opt/minizinc/ -name "minizinc" \
@@ -40,6 +31,11 @@ RUN echo "Creando enlace simbólico para minizinc..." \
     && ln -s /opt/minizinc/bin/minizinc /usr/local/bin/minizinc \
     && echo "Enlace simbólico creado, verificando minizinc --version..." \
     && minizinc --version
+
+# Buscar y eliminar cualquier archivo llamado count.mzn si existe
+RUN echo "Buscando y eliminando archivos count.mzn si existen..." \
+    && find / -name "count.mzn" -exec rm {} \; \
+    && echo "Búsqueda y eliminación de count.mzn completada."
 
 # Configuración de tu aplicación
 WORKDIR /app
