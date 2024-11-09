@@ -16,7 +16,6 @@ RUN echo "Verificando si minizinc está instalado:" && which minizinc
 RUN wget https://github.com/MiniZinc/MiniZincIDE/archive/refs/tags/2.8.7.tar.gz \
     && tar -xvzf 2.8.7.tar.gz \
     && mv MiniZincIDE-2.8.7 /opt/minizinc \
-    # Verifica el contenido del directorio para asegurar que MiniZinc se haya descargado correctamente
     && echo "Contenido del directorio /opt/minizinc después de la extracción:" \
     && ls -R /opt/minizinc/ \
     && echo "MiniZinc IDE descargado e instalado en /opt/minizinc"
@@ -34,7 +33,7 @@ RUN echo "Creando enlace simbólico para minizinc..." \
 
 # Buscar y eliminar cualquier archivo llamado count.mzn si existe
 RUN echo "Buscando y eliminando archivos count.mzn si existen..." \
-    && find / -name "count.mzn" -exec rm {} \; \
+    && find / -name "count.mzn" -exec rm -f {} + \
     && echo "Búsqueda y eliminación de count.mzn completada."
 
 # Configuración de tu aplicación
