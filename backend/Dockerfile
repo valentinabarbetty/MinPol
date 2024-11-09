@@ -1,49 +1,33 @@
-FROM node:22
+# Usar una imagen base de Ubuntu
+FROM ubuntu:20.04
 
-# Instalar dependencias necesarias
-RUN apt-get update && apt-get install -y minizinc \
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Actualizar los repositorios e instalar las dependencias necesarias
+RUN apt-get update && apt-get install -y \
     wget \
+    tar \
     build-essential \
-    coinor-cbc \
+    minizinc \
     curl \
-    unzip && \
-    rm -rf /var/lib/apt/lists/*
+    && apt-get clean
 
-# Verifica si minizinc se instaló correctamente en el sistema
-RUN echo "Verificando si minizinc está instalado:" && which minizinc
+# Instalar Node.js desde el repositorio oficial de NodeSource (versión 16.x)
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs
 
-# Descargar e instalar MiniZinc IDE
-RUN wget https://github.com/MiniZinc/MiniZincIDE/archive/refs/tags/2.8.7.tar.gz \
-    && tar -xvzf 2.8.7.tar.gz \
-    && mv MiniZincIDE-2.8.7 /opt/minizinc \
-    && echo "Contenido del directorio /opt/minizinc después de la extracción:" \
-    && ls -R /opt/minizinc/ \
-    && echo "MiniZinc IDE descargado e instalado en /opt/minizinc"
+# Verificar las versiones de Node.js y npm
+RUN node -v && npm -v
 
-# Verifica la estructura de directorios y si el binario minizinc está dentro de /opt/minizinc
-RUN echo "Verificando la estructura completa de /opt/minizinc..." \
-    && find /opt/minizinc/ -name "minizinc" \
-    && echo "Estructura de directorios de MiniZinc completada"
+# Copiar tu aplicación o archivos necesarios al contenedor
+WORKDIR /usr/src/app
+COPY . .
 
-# Asegúrate de que minizinc esté accesible desde cualquier lugar
-RUN echo "Creando enlace simbólico para minizinc..." \
-    && ln -s /opt/minizinc/bin/minizinc /usr/local/bin/minizinc \
-    && echo "Enlace simbólico creado, verificando minizinc --version..." \
-    && minizinc --version
-
-# Buscar y eliminar cualquier archivo llamado count.mzn si existe, excluyendo /proc, /sys y /dev
-RUN echo "Buscando y eliminando archivos count.mzn si existen..." \
-    && find / -path /proc -prune -o -path /sys -prune -o -path /dev -prune -o -name "count.mzn" -exec rm -f {} + \
-    && echo "Búsqueda y eliminación de count.mzn completada."
-
-# Configuración de tu aplicación
-WORKDIR /app
-COPY . /app
-
-# Instala las dependencias de Node.js
+# Instalar las dependencias de la aplicación
 RUN npm install
 
+# Exponer el puerto en el que corre tu servidor (en este caso el 3000)
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
+# Comando para arrancar tu aplicación
 CMD ["npm", "start"]

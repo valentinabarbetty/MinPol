@@ -57,7 +57,7 @@ console.log("Ruta al archivo minpol.mzn:", minpolPath);
       console.error(`stderr: ${stderr}`);
       return res.status(500).send("Error en la ejecución de MiniZinc");
     }
-
+    console.log("Salida de MiniZinc:", stdout);
     const polarizacionInicial2 = stdout.match(/Polarización inicial: ([\d.]+)/);
     const polarizacionFinal2 = stdout.match(/Polarización final: ([\d.]+)/);
     const movimientosMatch2 = stdout.match(/Movimientos Totales: ([\d.]+)/);
