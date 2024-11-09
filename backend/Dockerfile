@@ -11,6 +11,10 @@ RUN apt-get update && \
 # Ajustar el PATH si es necesario
 ENV PATH="/usr/local/bin/coinbc:${PATH}"
 
+# Verificar el PATH y la ubicación de minizinc
+RUN echo $PATH
+RUN which minizinc
+
 # Crea el directorio de la aplicación y configura el entorno
 WORKDIR /app
 COPY . /app
