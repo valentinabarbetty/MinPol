@@ -1,22 +1,27 @@
 <app-navbar></app-navbar>
 <div class="contenedor">
   <div class="steps-container">
-    <!-- Botón para subir archivo -->
-    <input type="file" id="fileInput" (change)="onFileSelected($event)" style="display: none" />
-
+    <input
+      type="file"
+      id="fileInput"
+      (change)="onFileSelected($event)"
+      style="display: none"
+    />
     <div class="upload-section">
-      <button mat-raised-button color="primary" class="square-button" (click)="triggerFileInput()"
-        matTooltip="Seleccionar archivo para subir">
+      <button
+        mat-raised-button
+        color="primary"
+        class="square-button"
+        (click)="triggerFileInput()"
+        matTooltip="Seleccionar archivo para subir"
+      >
         <mat-icon>upload</mat-icon>
         Subir Archivo
       </button>
-      
       <div *ngIf="selectedFile" class="file-info">
         Archivo seleccionado: {{ selectedFile.name }}
       </div>
     </div>
-
-    <!-- Botón procesar, cambia de color cuando se habilita/deshabilita -->
     <button
       mat-raised-button
       color="primary"
@@ -29,32 +34,33 @@
       Procesar
     </button>
   </div>
-
-
-
-
-  <mat-tab-group class="tab-group" #tabGroup >
+  <mat-tab-group class="tab-group" #tabGroup>
     <mat-tab label="Datos">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">upload</mat-icon>
         Datos Cargados
       </ng-template>
-      <h2 *ngIf="parsedData.numPersonas" class="centered-title">Datos Cargados</h2>
-
+      <h2 *ngIf="parsedData.numPersonas" class="centered-title">
+        Datos Cargados
+      </h2>
       <div class="contenedor-columnas" *ngIf="parsedData.numPersonas">
-
-
         <div class="columna">
           <div *ngIf="parsedData.numPersonas" class="data-display">
-
-            <p><strong>Número de Personas:</strong> {{ parsedData.numPersonas }}</p>
-            <p><strong>Número de Opiniones:</strong> {{ parsedData.numOpiniones }}</p>
-
+            <p>
+              <strong>Número de Personas:</strong> {{ parsedData.numPersonas }}
+            </p>
+            <p>
+              <strong>Número de Opiniones:</strong>
+              {{ parsedData.numOpiniones }}
+            </p>
             <div>
               <table class="styled-table">
                 <thead>
                   <tr>
-                    <th colspan="2" style="text-align: center; font-weight: bold;">
+                    <th
+                      colspan="2"
+                      style="text-align: center; font-weight: bold"
+                    >
                       Distribución de Personas por Opinión
                     </th>
                   </tr>
@@ -64,20 +70,26 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let opinion of parsedData.distribucionOpiniones; let i = index">
+                  <tr
+                    *ngFor="
+                      let opinion of parsedData.distribucionOpiniones;
+                      let i = index
+                    "
+                  >
                     <td>Opinión {{ i + 1 }}</td>
                     <td>{{ opinion }}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
             <div>
-
               <table class="styled-table">
                 <thead>
                   <tr>
-                    <th colspan="2" style="text-align: center; font-weight: bold;">
+                    <th
+                      colspan="2"
+                      style="text-align: center; font-weight: bold"
+                    >
                       Valores de las Opiniones
                     </th>
                   </tr>
@@ -87,19 +99,26 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let valor of parsedData.valoresOpiniones; let i = index">
+                  <tr
+                    *ngFor="
+                      let valor of parsedData.valoresOpiniones;
+                      let i = index
+                    "
+                  >
                     <td>Opinión {{ i + 1 }}</td>
                     <td>{{ valor }}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
             <div>
               <table class="styled-table">
                 <thead>
                   <tr>
-                    <th colspan="2" style="text-align: center; font-weight: bold;">
+                    <th
+                      colspan="2"
+                      style="text-align: center; font-weight: bold"
+                    >
                       Costos Extras
                     </th>
                   </tr>
@@ -109,17 +128,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let costoExtra of parsedData.costosExtras; let i = index">
+                  <tr
+                    *ngFor="
+                      let costoExtra of parsedData.costosExtras;
+                      let i = index
+                    "
+                  >
                     <td>Opinión {{ i + 1 }}</td>
                     <td>{{ costoExtra }}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-
-
-
-
             <p>
               <strong>Costo Total Máximo Permitido:</strong>
               {{ parsedData.costoTotalMax }}
@@ -131,25 +151,36 @@
           </div>
         </div>
         <div class="columna-2" *ngIf="parsedData.numPersonas" id="chart">
-          <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [dataLabels]="chartOptions.dataLabels"
-            [plotOptions]="chartOptions.plotOptions" [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis"
-            [title]="chartOptions.title" [colors]="chartOptions.colors"></apx-chart>
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [dataLabels]="chartOptions.dataLabels"
+            [plotOptions]="chartOptions.plotOptions"
+            [yaxis]="chartOptions.yaxis"
+            [xaxis]="chartOptions.xaxis"
+            [title]="chartOptions.title"
+            [colors]="chartOptions.colors"
+          ></apx-chart>
         </div>
-
-
       </div>
       <div>
         <table class="styled-table">
           <thead>
-            <tr>
-              <!-- Colspan dinámico con el número de opiniones -->
-              <th [attr.colspan]="parsedData.numOpiniones" style="text-align: center; font-weight: bold;">
+            <tr *ngIf="parsedData.costosDesplazamiento?.length > 0">
+              <th
+                [attr.colspan]="parsedData.numOpiniones"
+                style="text-align: center; font-weight: bold"
+              >
                 Costo de Desplazamiento entre Opiniones
               </th>
             </tr>
-            <tr>
-              <!-- Encabezado de las columnas dinámicas con el número de opiniones -->
-              <th *ngFor="let i of parsedData.costosDesplazamiento[0]; let j = index">
+            <tr *ngIf="parsedData.costosDesplazamiento?.length > 0">
+              <th
+                *ngFor="
+                  let i of parsedData.costosDesplazamiento[0];
+                  let j = index
+                "
+              >
                 Opinión {{ j + 1 }}
               </th>
             </tr>
@@ -162,22 +193,25 @@
         </table>
       </div>
     </mat-tab>
-
-    <mat-tab style="align-items: center !important;" label="Resultado">
+    <mat-tab style="align-items: center !important" label="Resultado">
       <ng-template mat-tab-label>
         <mat-icon class="tab-icon">check_circle</mat-icon>
         Resultado
       </ng-template>
-
-
-      <div class="centered-title"
-        *ngIf="polarizacion_inicial !== null && movimientos_totales !== null && distribucion_final !== null">
+      <div
+        class="centered-title"
+        *ngIf="
+          polarizacion_inicial !== null &&
+          movimientos_totales !== null &&
+          distribucion_final !== null
+        "
+      >
         <h2>Resultados</h2>
         <div class="tabla-centrada">
           <table class="styled-table">
             <thead>
               <tr>
-                <th colspan="3" style="text-align: center; font-weight: bold;">
+                <th colspan="3" style="text-align: center; font-weight: bold">
                   Resultados
                 </th>
               </tr>
@@ -196,34 +230,45 @@
             </tbody>
           </table>
         </div>
-        <div class="contenedor-final"
-          *ngIf="polarizacion_inicial !== null && movimientos_totales !== null && distribucion_final !== null">
-
-            <div class="columna-2-final" id="chart">
-              <!-- Gráfico con datos iniciales -->
-              <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
-                [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis" [title]="chartOptions.title"
-                [colors]="chartOptions.colors"></apx-chart>
-            </div>
-            <div class="columna-2-final" id="chart-final">
-              <!-- Gráfico con datos finales -->
-              <apx-chart [series]="chartOptions_final.series" [chart]="chartOptions_final.chart"
-                [dataLabels]="chartOptions_final.dataLabels" [plotOptions]="chartOptions_final.plotOptions"
-                [yaxis]="chartOptions_final.yaxis" [xaxis]="chartOptions_final.xaxis" [title]="chartOptions_final.title"
-                [colors]="chartOptions_final.colors"></apx-chart>
-            </div>
-
+        <div
+          class="contenedor-final"
+          *ngIf="
+            polarizacion_inicial !== null &&
+            movimientos_totales !== null &&
+            distribucion_final !== null
+          "
+        >
+          <div class="columna-2-final" id="chart">
+            <apx-chart
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [dataLabels]="chartOptions.dataLabels"
+              [plotOptions]="chartOptions.plotOptions"
+              [yaxis]="chartOptions.yaxis"
+              [xaxis]="chartOptions.xaxis"
+              [title]="chartOptions.title"
+              [colors]="chartOptions.colors"
+            ></apx-chart>
+          </div>
+          <div class="columna-2-final" id="chart-final">
+            <apx-chart
+              [series]="chartOptions_final.series"
+              [chart]="chartOptions_final.chart"
+              [dataLabels]="chartOptions_final.dataLabels"
+              [plotOptions]="chartOptions_final.plotOptions"
+              [yaxis]="chartOptions_final.yaxis"
+              [xaxis]="chartOptions_final.xaxis"
+              [title]="chartOptions_final.title"
+              [colors]="chartOptions_final.colors"
+            ></apx-chart>
+          </div>
         </div>
         <div class="contenedor-final">
-
-
-
           <div class="columna-2-final">
             <table class="styled-table">
               <thead>
                 <tr>
-                  <th colspan="2" style="text-align: center; font-weight: bold;">
+                  <th colspan="2" style="text-align: center; font-weight: bold">
                     Distribución Inicial de Personas por Opinión
                   </th>
                 </tr>
@@ -233,19 +278,23 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let opinion of parsedData.distribucionOpiniones; let i = index">
+                <tr
+                  *ngFor="
+                    let opinion of parsedData.distribucionOpiniones;
+                    let i = index
+                  "
+                >
                   <td>Opinión {{ i + 1 }}</td>
                   <td>{{ opinion }}</td>
                 </tr>
               </tbody>
             </table>
-
           </div>
           <div class="columna-2-final">
             <table class="styled-table">
               <thead>
                 <tr>
-                  <th colspan="2" style="text-align: center; font-weight: bold;">
+                  <th colspan="2" style="text-align: center; font-weight: bold">
                     Distribución Final de Personas por Opinión
                   </th>
                 </tr>
@@ -262,52 +311,45 @@
               </tbody>
             </table>
           </div>
-
         </div>
-
-
-
       </div>
-
-      <div style="display: flex; justify-content: center !important;"  *ngIf="polarizacion_inicial !== null && movimientos_totales !== null && distribucion_final !== null">
-
+      <div
+        style="display: flex; justify-content: center !important"
+        *ngIf="
+          polarizacion_inicial !== null &&
+          movimientos_totales !== null &&
+          distribucion_final !== null
+        "
+      >
         <table class="styled-table">
           <thead>
             <tr>
-              <th [attr.colspan]="parsedData.numOpiniones + 1" style="text-align: center; font-weight: bold;">
+              <th
+                [attr.colspan]="parsedData.numOpiniones + 1"
+                style="text-align: center; font-weight: bold"
+              >
                 Movimientos entre Opiniones
               </th>
             </tr>
             <tr>
-              <!-- Columna inicial vacía o con el texto "Opiniones" -->
               <th>Opiniones</th>
-              <!-- Encabezados dinámicos de las columnas -->
               <th *ngFor="let colIndex of numOpinionesArray">
                 Opinión {{ colIndex + 1 }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <!-- Filas dinámicas con encabezado de fila y valores de la matriz -->
             <tr *ngFor="let row of x; let rowIndex = index">
-              <!-- Primera columna de cada fila con el nombre de la fila -->
               <td>Opinión {{ rowIndex + 1 }}</td>
-              <!-- Celdas de la matriz -->
               <td *ngFor="let cell of row">{{ cell }}</td>
             </tr>
           </tbody>
         </table>
-
-
       </div>
-
       <div *ngIf="errorMessage">
         <p class="error-message">{{ errorMessage }}</p>
       </div>
     </mat-tab>
-
   </mat-tab-group>
-
-
 </div>
 <router-outlet></router-outlet>

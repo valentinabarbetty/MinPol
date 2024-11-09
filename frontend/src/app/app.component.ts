@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MinizincService } from './minizinc.service';
@@ -9,9 +9,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
 import { NgApexchartsModule } from "ng-apexcharts";
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 
 @Component({
   selector: 'app-root',
@@ -27,18 +28,28 @@ import { NgApexchartsModule } from "ng-apexcharts";
     MatTabsModule,
     CommonModule,
     NgApexchartsModule,
-
+    MatSnackBarModule,
+    MatButtonModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  private _snackBar = inject(MatSnackBar);
+
+  openSnackBar(message: string, type: 'success' | 'error') {
+    this._snackBar.open(message, 'Cerrar', {
+      duration: 5000, // Duración en milisegundos
+      panelClass: type === 'success' ? 'snack-bar-success' : 'snack-bar-error', // Clase de estilo personalizada
+    });
+  }
+
+
   title = 'min-pol';
   selectedFile: File | null = null;
   parsedData: any = {};
   errorMessage: string = '';
   resultadoMinizinc: string | null = null;
-
   polarizacion_inicial: number | null = null;
   polarizacion_final: number | null = null;
   movimientos_totales: number | null = null;
@@ -47,7 +58,7 @@ export class AppComponent {
   isProcessing: boolean = false;
   @ViewChild('tabGroup', { static: false }) tabGroup: MatTabGroup | undefined;
 
-  constructor(private minizincService: MinizincService,) {}
+  constructor(private minizincService: MinizincService,) { }
 
 
   public p = [];
@@ -112,7 +123,7 @@ export class AppComponent {
       series: [
         {
           name: 'Distribución de Opiniones',
-          data: this.p,
+          data: this.p || [],
         },
       ],
       colors: ['#98bdea'],
@@ -162,10 +173,10 @@ export class AppComponent {
       series: [
         {
           name: 'Distribución de Opiniones',
-          data: this.distribucion_final, // Datos basados en 'p'
+          data: this.distribucion_final ?? [],
         },
       ],
-      colors: ['#b4d6ba'], // Color personalizado para las barras
+      colors: ['#b4d6ba'],
     };
   }
 
@@ -200,6 +211,11 @@ export class AppComponent {
           content[5 + i].split(',').map(Number)
         );
       }
+      if (!this.parsedData.costosDesplazamiento || this.parsedData.costosDesplazamiento.length === 0) {
+        this.errorMessage = 'El archivo no contiene datos para costos de desplazamiento.';
+        return; // Termina la ejecución si no hay datos válidos
+      }
+
       this.parsedData.costoTotalMax = parseFloat(
         content[5 + this.parsedData.numOpiniones]
       );
@@ -216,9 +232,7 @@ export class AppComponent {
 
 
   ejecutarMinizinc() {
-    // Si ya hay una solicitud en proceso, no permitas otra
     if (this.isProcessing) {
-     // this.processingMessage = 'La solicitud ya está en proceso. Por favor, espera.';
       return;
     }
 
@@ -227,8 +241,7 @@ export class AppComponent {
 
     this.minizincService.ejecutarMinizinc(this.parsedData).subscribe({
       next: (response) => {
-        console.log('Respuesta de MiniZinc:', response);
-        // Procesa la respuesta...
+        this.openSnackBar('Ejecución completada con éxito', 'success');
         this.polarizacion_inicial = response.polarizacion_inicial;
         this.polarizacion_final = response.polarizacion_final;
         this.movimientos_totales = response.movimientos_totales;
@@ -236,17 +249,16 @@ export class AppComponent {
         this.distribucion_final = response.distribucion_final;
         this.x = response.movimientos_realizados;
         this.numOpinionesArray = Array.from({ length: this.parsedData.numOpiniones }, (_, i) => i);
-
         this.valores_maximos = [this.parsedData.maxMovimientos, this.parsedData.costoTotalMax, this.polarizacion_inicial];
         this.valores_finales = [this.movimientos_totales, this.costo_total, this.polarizacion_final];
         this.updateChartDataFinal();
-
         if (this.tabGroup) {
           this.tabGroup.selectedIndex = 1;
         }
       },
       error: (err) => {
         console.error('Error al ejecutar MiniZinc:', err);
+        this.openSnackBar('Error al ejecutar MiniZinc. Inténtalo de nuevo.', 'error');
       },
       complete: () => {
 

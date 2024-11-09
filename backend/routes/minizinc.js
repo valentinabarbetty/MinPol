@@ -55,9 +55,6 @@ router.post("/minPol", (req, res) => {
     const costoTotal2 = stdout.match(/Costo total: ([\d.]+)/);
     const matrizMov2 = stdout.match(/Distribución final de personas por opinión: \[(.*)\]/);
     const xMatch = stdout.match(/Movimientos realizados: \[(.*)\]/);
-
-    console.log("Resultado", stdout);
-
     if (
       polarizacionInicial2 &&
       polarizacionFinal2 &&
@@ -81,10 +78,6 @@ router.post("/minPol", (req, res) => {
     for (let i = 0; i < numOpiniones; i++) {
       movimientosRealizados.push(movimientosList.slice(i * numOpiniones, (i + 1) * numOpiniones));
     }
-
-      // Imprimir la matriz `x` en la consola
-      console.log("Movimientos realizados (matriz):", movimientosRealizados);
-
       res.json({
         polarizacion_inicial: polarizacionInicial,
         polarizacion_final: polarizacionFinal,

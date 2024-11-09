@@ -170,3 +170,13 @@
   color: #1976d2; /* Azul acorde con el botón */
   font-weight: bold;
 }
+.snack-bar-success {
+    background-color: #4caf50; /* Verde para éxito */
+    color: #ffffff;
+  }
+  
+  .snack-bar-error {
+    background-color: #f44336; /* Rojo para error */
+    color: #ffffff;
+  }
+  
