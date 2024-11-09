@@ -5,36 +5,11 @@ const path = require("path");
 const router = express.Router();
 
 router.post("/minPol", (req, res) => {
-  const {
-    numPersonas,
-    numOpiniones,
-    distribucionOpiniones,
-    valoresOpiniones,
-    costosExtras,
-    costosDesplazamiento,
-    costoTotalMax,
-    maxMovimientos,
-  } = req.body;
-
-  const dataContent = `
-        n = ${numPersonas};
-        m = ${numOpiniones};
-        p = [${distribucionOpiniones.join(", ")}];
-        v = [${valoresOpiniones.join(", ")}];
-        ce = [${costosExtras.join(", ")}];
-        c = array2d(1..${numOpiniones}, 1..${numOpiniones}, [${costosDesplazamiento
-    .flat()
-    .join(", ")}]);
-        ct = ${costoTotalMax};
-        maxM = ${maxMovimientos};
-    `;
-  fs.writeFileSync("data.dzn", dataContent);
-
-  const minpolPath = path.join(__dirname, "..", "minizinc", "minpol.mzn");
-  const timeoutDuration = 420000;
-  const timeLimit = Math.floor(timeoutDuration / 1000);
-  //const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
-  const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
+  // ... Código anterior ...
+  
+  console.log("Ruta del archivo minpol.mzn: ", minpolPath);
+  console.log("Contenido del archivo data.dzn:", dataContent);
+  console.log("Ejecutando el comando de MiniZinc: ", command);
 
   const execProcess = exec(command, (error, stdout, stderr) => {
     clearTimeout(timeout);
@@ -50,12 +25,16 @@ router.post("/minPol", (req, res) => {
       return res.status(500).send("Error en la ejecución de MiniZinc");
     }
 
+    console.log("Salida de MiniZinc (stdout): ", stdout);
+
+    // Parsing del stdout
     const polarizacionInicial2 = stdout.match(/Polarización inicial: ([\d.]+)/);
     const polarizacionFinal2 = stdout.match(/Polarización final: ([\d.]+)/);
     const movimientosMatch2 = stdout.match(/Movimientos Totales: ([\d.]+)/);
     const costoTotal2 = stdout.match(/Costo total: ([\d.]+)/);
     const matrizMov2 = stdout.match(/Distribución final de personas por opinión: \[(.*)\]/);
     const xMatch = stdout.match(/Movimientos realizados: \[(.*)\]/);
+
     if (
       polarizacionInicial2 &&
       polarizacionFinal2 &&
@@ -70,15 +49,21 @@ router.post("/minPol", (req, res) => {
       const movimientosTotales = parseFloat(movimientosMatch2[1]).toFixed(1);
       const distribucionFinal = matrizMov2[1].split(",").map(Number);
 
-      // Procesar la matriz de movimientos `x`
-      const movimientosList = xMatch[1]
-      .split(", ")
-      .map(Number);
+      const movimientosList = xMatch[1].split(", ").map(Number);
+      const movimientosRealizados = [];
+      for (let i = 0; i < numOpiniones; i++) {
+        movimientosRealizados.push(movimientosList.slice(i * numOpiniones, (i + 1) * numOpiniones));
+      }
 
-    const movimientosRealizados = [];
-    for (let i = 0; i < numOpiniones; i++) {
-      movimientosRealizados.push(movimientosList.slice(i * numOpiniones, (i + 1) * numOpiniones));
-    }
+      console.log("Resultado final a enviar: ", {
+        polarizacion_inicial: polarizacionInicial,
+        polarizacion_final: polarizacionFinal,
+        costo_total: costoTotal,
+        movimientos_totales: movimientosTotales,
+        distribucion_final: distribucionFinal,
+        movimientos_realizados: movimientosRealizados,
+      });
+
       res.json({
         polarizacion_inicial: polarizacionInicial,
         polarizacion_final: polarizacionFinal,
@@ -92,6 +77,7 @@ router.post("/minPol", (req, res) => {
     }
   });
 
+  // Monitoreo y timeout
   const monitorInterval = setInterval(() => {
     console.log("Esperando respuesta de MiniZinc...");
   }, 10000);
@@ -102,5 +88,6 @@ router.post("/minPol", (req, res) => {
     res.status(408).send(`Tiempo de espera excedido (${timeoutDuration / 1000} segundos).`);
   }, timeoutDuration);
 });
+
 
 module.exports = router;
