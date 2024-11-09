@@ -1,8 +1,8 @@
 const cors = require('cors');
 
 const corsOptions = {
-    origin: 'http://localhost:4200', // Restringe a este origen
-    optionsSuccessStatus: 200 // Para navegadores antiguos
-};
-
+    origin: process.env.CORS_ORIGIN || 'http://localhost:4200', // Permite un origen dinámico
+    optionsSuccessStatus: 200
+  };
+  
 module.exports = cors(corsOptions);
