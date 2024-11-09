@@ -8,7 +8,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class MinizincService {
   //private apiUrl = 'http://localhost:3000/api/minPol';
-  private apiUrl = 'https://minpol-9bez.onrender.com/api/minPol';
+  private apiUrl = 'https://minpol-u2s9.onrender.com/api/minPol/';
   constructor(private http: HttpClient) { }
  
   ejecutarMinizinc(data: any): Observable<{

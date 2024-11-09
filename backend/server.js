@@ -16,5 +16,5 @@ app.use('/api', minizincRoutes);
 
 // Inicia el servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+    console.log(`Servidor corriendo en puerto: ${port}`);
 });
