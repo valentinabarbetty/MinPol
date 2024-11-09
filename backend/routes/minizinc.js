@@ -43,7 +43,7 @@ console.log("Ruta al archivo minpol.mzn:", minpolPath);
   const timeLimit = Math.floor(timeoutDuration / 1000);
   //const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
   const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
-
+  console.log("Ejecutando MiniZinc con el siguiente comando:", command);
   const execProcess = exec(command, (error, stdout, stderr) => {
     clearTimeout(timeout);
     clearInterval(monitorInterval);
