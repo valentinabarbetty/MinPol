@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --prod",
+    "start": "serve -s dist/frontend -l $PORT",
+    "build": "ng build --configuration=production",
+    "build:dev": "ng build --configuration=development",
+    "serve": "serve -s dist/frontend",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
