@@ -29,21 +29,17 @@ router.post("/minPol", (req, res) => {
         maxM = ${maxMovimientos};
     `;
   fs.writeFileSync("data.dzn", dataContent);
-  console.log("Archivo data.dzn creado con los siguientes contenidos:", dataContent);
-
   const minpolPath = path.join(__dirname, "..", "minizinc", "minpol.mzn");
   // Verifica si el archivo existe
 if (!fs.existsSync(minpolPath)) {
   console.error("El archivo minpol.mzn no existe en la ruta especificada:", minpolPath);
   return res.status(500).send("Archivo minpol.mzn no encontrado");
 }
-console.log("Ruta al archivo minpol.mzn:", minpolPath);
 
   const timeoutDuration = 420000;
   const timeLimit = Math.floor(timeoutDuration / 1000);
-  //const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
-  const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
-  console.log("Ejecutando MiniZinc con el siguiente comando:", command);
+  const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
+  //const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
   const execProcess = exec(command, (error, stdout, stderr) => {
     clearTimeout(timeout);
     clearInterval(monitorInterval);
@@ -57,7 +53,6 @@ console.log("Ruta al archivo minpol.mzn:", minpolPath);
       console.error(`stderr: ${stderr}`);
       return res.status(500).send("Error en la ejecución de MiniZinc");
     }
-    console.log("Salida de MiniZinc:", stdout);
     const polarizacionInicial2 = stdout.match(/Polarización inicial: ([\d.]+)/);
     const polarizacionFinal2 = stdout.match(/Polarización final: ([\d.]+)/);
     const movimientosMatch2 = stdout.match(/Movimientos Totales: ([\d.]+)/);
