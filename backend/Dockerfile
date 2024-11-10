@@ -4,21 +4,20 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Actualizar los repositorios e instalar las dependencias necesarias
+
 RUN apt-get update && apt-get install -y \
     wget \
     tar \
     build-essential \
+    minizinc \
     curl \
-    gnupg2 \
-    lsb-release \
-    coinor-cbc \
-    && apt-get clean && apt-get autoremove -y
+    && apt-get clean
 
 # Descargar e instalar MiniZinc 2.8.7 desde el archivo .tgz
-RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
-    tar -xvzf MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
-    rm MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
-    mv MiniZincIDE-2.8.7-bundle-linux-x86_64 /usr/local/
+#RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
+#    tar -xvzf MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
+#    rm MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
+#    mv MiniZincIDE-2.8.7-bundle-linux-x86_64 /usr/local/
 
 # Establecer las rutas de MiniZinc y su solver CoinBC en el PATH global
 ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:/usr/local/bin:$PATH"
