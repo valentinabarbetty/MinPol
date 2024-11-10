@@ -31,7 +31,7 @@ RUN minizinc --version
 
 RUN minizinc --solver cbc --version
 
-RUN minizinc --solver
+RUN minizinc --solvers
 
 RUN ls -la /usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/share/minizinc/solvers
 
