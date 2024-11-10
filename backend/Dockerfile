@@ -27,7 +27,7 @@ ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:/usr/local/bin:$P
 # Verificar las versiones de CBC, MiniZinc y CoinBC
 RUN which cbc && cbc --version && \
     minizinc --version && \
-    minizinc --solver cbc --version && \
+#    minizinc --solver cbc --version && \
     minizinc --solvers 
 #    ls -la /usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/share/minizinc/solvers
 
