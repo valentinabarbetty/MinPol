@@ -14,7 +14,12 @@ app.use(bodyParser.json());
 // Usar las rutas de MiniZinc
 app.use('/api', minizincRoutes);
 
-// Inicia el servidor
+app.get('/', (req, res) => {
+    console.log("Recibido request en /");
+    res.send('Hola mundo');
+});
+
+
 app.listen(port, () => {
     console.log(`Servidor corriendo en puerto: ${port}`);
 });

@@ -26,6 +26,7 @@ router.post("/minPol", (req, res) => {
   ) {
     return res.status(400).send("Datos incompletos o inválidos.");
   }
+  
 
   // Generar contenido para el archivo .dzn
   const dataContent = `
