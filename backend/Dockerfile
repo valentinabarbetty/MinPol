@@ -23,6 +23,8 @@ RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZin
 # Establecer las rutas de MiniZinc y su solver CoinBC en el PATH global
 ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:/usr/local/bin:$PATH"
 
+RUN chmod -R 777 /usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/share/minizinc/solvers
+
 # Verificar las versiones de CBC, MiniZinc y CoinBC
 RUN which cbc && cbc --version && \
     minizinc --version && \
