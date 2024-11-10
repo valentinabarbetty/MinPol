@@ -19,7 +19,7 @@ RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZin
     && rm /tmp/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz
 
 # Añadir MiniZinc IDE y MiniZinc ejecutable al PATH para que estén disponibles en cualquier momento
-ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:$PATH"
+#ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:$PATH"
 
 # Verificar la versión de MiniZinc instalada
 RUN minizinc --version
