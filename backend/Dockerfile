@@ -27,18 +27,18 @@ RUN minizinc --version
 # Verificar si el solver CBC está en la ruta correcta
 RUN which cbc && cbc --version
 
+# Crear un directorio para los solvers de MiniZinc
+RUN mkdir -p /usr/share/minizinc/solvers
+
+# Crear un enlace simbólico en caso de que cbc esté en /usr/bin
+RUN ln -s /usr/bin/cbc /usr/local/bin/cbc
+
 # Instalar Node.js desde el repositorio oficial de NodeSource (versión 20.x)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && apt-get clean
 
 # Verificar las versiones de Node.js y npm
 RUN node -v && npm -v
-
-# Crear un directorio para los solvers de MiniZinc
-RUN mkdir -p /usr/share/minizinc/solvers
-
-# Crear un enlace simbólico en caso de que cbc esté en /usr/bin
-RUN ln -s /usr/bin/cbc /usr/local/bin/cbc
 
 # Crear un usuario para la aplicación (por razones de seguridad)
 RUN useradd -m appuser
@@ -56,3 +56,4 @@ EXPOSE 10000
 
 # Comando para arrancar la aplicación
 CMD ["npm", "start"]
+

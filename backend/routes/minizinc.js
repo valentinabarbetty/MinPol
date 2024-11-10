@@ -49,7 +49,8 @@ router.post("/minPol", (req, res) => {
   }
 
   const minpolPath = path.join(__dirname, "..", "minizinc", "minpol.mzn");
-
+  console.log("Ruta de minpol.mzn: ", minpolPath);
+  console.log("¿El archivo minpol.mzn existe?", fs.existsSync(minpolPath));
   // Verificar si el archivo minpol.mzn existe
   if (!fs.existsSync(minpolPath)) {
     console.error("El archivo minpol.mzn no existe en la ruta especificada:", minpolPath);
@@ -64,6 +65,8 @@ router.post("/minPol", (req, res) => {
   const timeLimit = Math.floor(timeoutDuration / 1000);
   const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
 
+  console.log("Ejecutando comando: ", command);
+
   // Ejecutar el comando MiniZinc
   const execProcess = exec(command, (error, stdout, stderr) => {
     // Limpiar los recursos después de la ejecución
@@ -76,11 +79,11 @@ router.post("/minPol", (req, res) => {
 
     if (stderr) {
       console.error(`stderr: ${stderr}`);
-      return res.status(500).send("Error en la ejecución de MiniZinc");
+      return res.status(500).send(`stderr: ${stderr}`);
     }
+    console.log("Salida de MiniZinc: ", stdout);
 
     // Procesar la salida de MiniZinc
-    console.log("Comando ejecutado correctamente, procesando salida...");
 
     const polarizacionInicial2 = stdout.match(/Polarización inicial: ([\d.]+)/);
     const polarizacionFinal2 = stdout.match(/Polarización final: ([\d.]+)/);
