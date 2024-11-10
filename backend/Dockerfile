@@ -29,6 +29,12 @@ RUN cbc --version
 # Verificar la versión de MiniZinc instalada
 RUN minizinc --version
 
+RUN minizinc --solver cbc --version
+
+RUN minizinc --solver
+
+RUN ls -la /usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/share/minizinc/solvers
+
 # Instalar Node.js desde el repositorio oficial de NodeSource (versión 20.x)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
@@ -42,6 +48,9 @@ RUN mkdir -p /usr/share/minizinc/solvers
 
 # Crear un enlace simbólico en caso de que cbc esté en /usr/bin
 RUN ln -s /usr/bin/cbc /usr/local/bin/cbc
+
+RUN chmod +x /usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin/minizinc && \
+    chmod +x /usr/bin/cbc
 
 # Definir el directorio de trabajo y copiar los archivos de la aplicación
 WORKDIR /usr/src/app
