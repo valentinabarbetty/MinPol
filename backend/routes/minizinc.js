@@ -64,7 +64,7 @@ router.post("/minPol", (req, res) => {
 
   const timeoutDuration = 420000;
   const timeLimit = Math.floor(timeoutDuration / 1000);
-  const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
+  const command = `minizinc --solver CoinBC --time-limit ${timeLimit} /usr/src/app/minizinc/minpol.mzn data.dzn`;
   //const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
 
   console.log("Ejecutando comando: ", command);

@@ -24,6 +24,8 @@ ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:$PATH"
 
 RUN which cbc
 
+RUN cbc --version
+
 # Verificar la versión de MiniZinc instalada
 RUN minizinc --version
 
