@@ -44,14 +44,17 @@ router.post("/minPol", (req, res) => {
   try {
     fs.writeFileSync("data.dzn", dataContent);
     console.log("Archivo de datos 'data.dzn' generado.");
+    const fileContent = fs.readFileSync("data.dzn", "utf8");
+    console.log("Contenido de 'data.dzn':\n", fileContent);
+
   } catch (err) {
     console.error("Error al generar el archivo de datos:", err);
     return res.status(500).send("Error al generar el archivo de datos.");
   }
 
   const minpolPath = path.join(__dirname, "..", "minizinc", "minpol.mzn");
-  console.log("Ruta de minpol.mzn: ", minpolPath);
-  console.log("¿El archivo minpol.mzn existe?", fs.existsSync(minpolPath));
+  //console.log("Ruta de minpol.mzn: ", minpolPath);
+  //console.log("¿El archivo minpol.mzn existe?", fs.existsSync(minpolPath));
   // Verificar si el archivo minpol.mzn existe
   if (!fs.existsSync(minpolPath)) {
     console.error("El archivo minpol.mzn no existe en la ruta especificada:", minpolPath);
@@ -59,13 +62,14 @@ router.post("/minPol", (req, res) => {
     return res.status(500).send("Archivo minpol.mzn no encontrado");
   }
 
+  console.log("Archivo minpol.mzn encontrado en la ruta especificada.", minpolPath);
   // Mostrar mensaje antes de ejecutar MiniZinc
   console.log("Ejecutando el comando MiniZinc con solver CoinBC...");
 
   const timeoutDuration = 420000;
   const timeLimit = Math.floor(timeoutDuration / 1000);
-  //const command = `minizinc --solver CoinBC --time-limit ${timeLimit} /usr/src/app/minizinc/minpol.mzn data.dzn`;
-  const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
+  const command = `minizinc --solver CoinBC --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
+  //const command = `minizinc --solver Gecode --time-limit ${timeLimit} "${minpolPath}" data.dzn`;
 
   console.log("Ejecutando comando: ", command);
 
