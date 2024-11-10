@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     minizinc \
     curl \
+    gnupg2 \
+    lsb-release \
+    coinor-cbc \
     && apt-get clean
 
 ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:$PATH"
