@@ -14,6 +14,11 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     coinor-cbc \
     && apt-get clean
+# Descargar e instalar MiniZinc 2.8.7 desde el archivo .tgz
+RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
+    tar -xvzf MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
+    rm MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
+    mv MiniZincIDE-2.8.7 /usr/local/
 
 ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:$PATH"
 
