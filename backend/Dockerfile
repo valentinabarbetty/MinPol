@@ -15,10 +15,11 @@ RUN apt-get update && apt-get install -y \
     coinor-cbc \
     && apt-get clean
 
-# Descargar MiniZinc 2.8.7 desde GitHub y descomprimir el archivo
-RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz -O /tmp/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz && \
-    tar -xvzf /tmp/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz -C /usr/local/ && \
-    rm -f /tmp/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz  # Eliminar el archivo temporal descargado
+# Descargar MiniZinc 2.8.7 desde GitHub
+RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.8.7/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz -O /tmp/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz
+
+# Descomprimir el archivo descargado
+RUN tar -xvzf /tmp/MiniZincIDE-2.8.7-bundle-linux-x86_64.tgz -C /usr/local/
 
 # Añadir MiniZinc IDE y MiniZinc ejecutable al PATH para que estén disponibles en cualquier momento
 ENV PATH="/usr/local/MiniZincIDE-2.8.7-bundle-linux-x86_64/bin:$PATH"
@@ -28,8 +29,7 @@ RUN minizinc --version
 
 # Instalar Node.js desde el repositorio oficial de NodeSource (versión 20.x)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean  # Limpiar caché de apt después de instalar Node.js
+    apt-get install -y nodejs
 
 # Verificar las versiones de Node.js y npm
 RUN node -v && npm -v
@@ -42,7 +42,7 @@ RUN ln -s /usr/bin/cbc /usr/local/bin/cbc
 
 # Definir el directorio de trabajo y copiar los archivos de la aplicación
 WORKDIR /usr/src/app
-COPY . . 
+COPY . .
 
 # Instalar las dependencias de la aplicación
 RUN npm install
